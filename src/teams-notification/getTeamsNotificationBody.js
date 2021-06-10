@@ -1,6 +1,5 @@
 const core = require('@actions/core');
 const { getSections } = require('./sections');
-const { getActions } = require('./actions');
 
 function getInitialMessageBody() {
   const title = core.getInput('title');
@@ -15,7 +14,6 @@ function getInitialMessageBody() {
 
   return {
     '@type': 'MessageCard',
-    '@context': 'https://schema.org/extensions',
     themeColor: themeColor,
     summary: 'GitHub Actions Workflow Status',
     title
@@ -25,8 +23,7 @@ function getInitialMessageBody() {
 function getTeamsNotificationBody() {
   const notificationBody = {
     ...getInitialMessageBody(),
-    sections: getSections(),
-    potentialAction: getActions()
+    sections: getSections()
   };
 
   return notificationBody;

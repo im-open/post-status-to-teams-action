@@ -2328,6 +2328,7 @@ var require_sendTeamsNotification = __commonJS({
     var core2 = require_core();
     var axios = require_axios2();
     function sendTeamsNotification2(teamsUri, body) {
+      core2.info(JSON.stringify(body));
       axios({
         method: 'post',
         url: teamsUri,
@@ -8333,14 +8334,51 @@ var require_github = __commonJS({
   }
 });
 
+// src/teams-notification/actions.js
+var require_actions = __commonJS({
+  'src/teams-notification/actions.js'(exports2, module2) {
+    var core2 = require_core();
+    var { context } = require_github();
+    function getCustomActions() {
+      const customActionsInput = core2.getInput('custom-actions');
+      const customActionsArray = customActionsInput
+        ? JSON.parse(customActionsInput)
+        : [];
+      if (!customActionsArray) return [];
+      return customActionsArray.map(action => ({
+        '@context': 'http://schema.org',
+        '@type': 'ViewAction',
+        name: action.name,
+        target: [action.uri]
+      }));
+    }
+    function getActions() {
+      const workflowType = core2.getInput('workflow-type');
+      const generalActions = [
+        {
+          '@context': 'http://schema.org',
+          '@type': 'ViewAction',
+          name: `View ${workflowType} Log`,
+          target: [
+            `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${context.runId}`
+          ]
+        }
+      ];
+      return [...generalActions, ...getCustomActions()];
+    }
+    module2.exports = { getActions };
+  }
+});
+
 // src/teams-notification/sections.js
 var require_sections = __commonJS({
   'src/teams-notification/sections.js'(exports2, module2) {
     var core2 = require_core();
     var { context } = require_github();
+    var { getActions } = require_actions();
     function getGeneralFacts() {
       const status = core2.getInput('workflow-status', { required: true });
-      const repoUrl = `https://github.com/${context.repository}`;
+      const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
       const branchUrl = `${repoUrl}/tree/${context.ref}`;
       const generalFacts = [
         {
@@ -8353,7 +8391,7 @@ var require_sections = __commonJS({
         },
         {
           name: 'Repository & branch: ',
-          value: `\`[${branchUrl}](${branchUrl})\``
+          value: `[${branchUrl}](${branchUrl})`
         }
       ];
       return generalFacts;
@@ -8371,7 +8409,9 @@ var require_sections = __commonJS({
     }
     function getTheFacts() {
       const customFactsInput = core2.getInput('custom-facts');
-      const customFactsArray = JSON.parse(customFactsInput);
+      const customFactsArray = customFactsInput
+        ? JSON.parse(customFactsInput)
+        : [];
       return [
         ...getGeneralFacts(),
         ...getConditionalFacts(),
@@ -8387,51 +8427,12 @@ var require_sections = __commonJS({
         activitySubtitle: new Date().toLocaleString('en-us', {
           timeZone
         }),
-        facts: getTheFacts()
+        facts: getTheFacts(),
+        potentialAction: getActions()
       };
-      return section;
+      return [section];
     }
     module2.exports = { getSections };
-  }
-});
-
-// src/teams-notification/actions.js
-var require_actions = __commonJS({
-  'src/teams-notification/actions.js'(exports2, module2) {
-    var core2 = require_core();
-    var { context } = require_github();
-    function getCustomActions() {
-      const customActionsInput = core2.getInput('custom-actions');
-      const customActionsArray = JSON.parse(customActionsInput);
-      if (!customActionsArray) return [];
-      return customActionsArray.map(action => ({
-        '@type': 'OpenUri',
-        name: action.name,
-        targets: [
-          {
-            os: 'default',
-            uri: action.uri
-          }
-        ]
-      }));
-    }
-    function getActions() {
-      const workflowType = core2.getInput('workflow-type');
-      const generalActions = [
-        {
-          '@type': 'OpenUri',
-          name: `View ${workflowType} Log`,
-          targets: [
-            {
-              os: 'default',
-              uri: `https://github.com/${context.repository}/actions/runs/${context.runId}`
-            }
-          ]
-        }
-      ];
-      return [...generalActions, ...getCustomActions()];
-    }
-    module2.exports = { getActions };
   }
 });
 
@@ -8440,7 +8441,6 @@ var require_getTeamsNotificationBody = __commonJS({
   'src/teams-notification/getTeamsNotificationBody.js'(exports2, module2) {
     var core2 = require_core();
     var { getSections } = require_sections();
-    var { getActions } = require_actions();
     function getInitialMessageBody() {
       const title = core2.getInput('title');
       const workflowStatus = core2.getInput('workflow-status');
@@ -8452,7 +8452,6 @@ var require_getTeamsNotificationBody = __commonJS({
       }
       return {
         '@type': 'MessageCard',
-        '@context': 'https://schema.org/extensions',
         themeColor,
         summary: 'GitHub Actions Workflow Status',
         title
@@ -8461,8 +8460,7 @@ var require_getTeamsNotificationBody = __commonJS({
     function getTeamsNotificationBody2() {
       const notificationBody = {
         ...getInitialMessageBody(),
-        sections: getSections(),
-        potentialAction: getActions()
+        sections: getSections()
       };
       return notificationBody;
     }

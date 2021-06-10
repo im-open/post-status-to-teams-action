@@ -1,9 +1,10 @@
 const core = require('@actions/core');
 const { context } = require('@actions/github');
+const { getActions } = require('./actions');
 
 function getGeneralFacts() {
   const status = core.getInput('workflow-status', { required: true });
-  const repoUrl = `https://github.com/${context.repository}`;
+  const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
   const branchUrl = `${repoUrl}/tree/${context.ref}`;
 
   const generalFacts = [
@@ -17,7 +18,7 @@ function getGeneralFacts() {
     },
     {
       name: 'Repository & branch: ',
-      value: `\`[${branchUrl}](${branchUrl})\``
+      value: `[${branchUrl}](${branchUrl})`
     }
   ];
 
@@ -40,7 +41,7 @@ function getConditionalFacts() {
 
 function getTheFacts() {
   const customFactsInput = core.getInput('custom-facts');
-  const customFactsArray = JSON.parse(customFactsInput);
+  const customFactsArray = customFactsInput ? JSON.parse(customFactsInput) : [];
 
   return [
     ...getGeneralFacts(),
@@ -58,10 +59,11 @@ function getSections() {
     activitySubtitle: new Date().toLocaleString('en-us', {
       timeZone
     }),
-    facts: getTheFacts()
+    facts: getTheFacts(),
+    potentialAction: getActions()
   };
 
-  return section;
+  return [section];
 }
 
 module.exports = { getSections };
