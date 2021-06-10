@@ -4,12 +4,12 @@ description: "Posts a status update to Teams."
 
 inputs:
   title:
-    description: "The title of the card posted to Teams"
+    description: "The title of the card posted to Teams."
     required: true
     default: "GitHub Actions Workflow Status Update"
   
   workflow-status:
-    description: "The status to report. The values success and failure will result in green and red color indicators on the Teams Card. Anything else will result in gray."  
+    description: "The status to report. The values success and failure will result in green and red color indicators (respectively) on the Teams Card. Anything else will result in gray."  
     required: true
   
   workflow-type:
@@ -27,13 +27,13 @@ inputs:
     default: null
 
   custom-actions:
-    description: "JSON-parseable string defining the list of objects with name and uri to include in the list of actions."
+    description: "JSON-parseable string defining a list of objects with name and uri to include in the list of actions."
     required: false
     default: null
 
   timezone:
     description: "A valid database timezone name, e.g. America/Denver."
-    required: false
+    required: true
     default: "UTC"
 
   environment:

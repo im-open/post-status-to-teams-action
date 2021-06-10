@@ -2,7 +2,7 @@
   "name": "post-build-status-to-teams",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "build": "npm ci && esbuild ./src/main.js --bundle --platform=node --outfile=dist/index.js",
     "bundle": "esbuild ./src/main.js --bundle --platform=node --outfile=dist/index.js",
@@ -11,7 +11,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run build && npm run format && git add dist/index.js",
+      "pre-commit": "npm run build && npm run format",
       "pre-push": "npm run format-check"
     }
   },
