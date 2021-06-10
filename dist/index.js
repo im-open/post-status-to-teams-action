@@ -2328,7 +2328,6 @@ var require_sendTeamsNotification = __commonJS({
     var core2 = require_core();
     var axios = require_axios2();
     function sendTeamsNotification2(teamsUri, body) {
-      core2.info(JSON.stringify(body));
       axios({
         method: 'post',
         url: teamsUri,

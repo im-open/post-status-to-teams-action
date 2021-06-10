@@ -2,7 +2,6 @@ const core = require('@actions/core');
 const axios = require('axios');
 
 function sendTeamsNotification(teamsUri, body) {
-  core.info(JSON.stringify(body));
   axios({
     method: 'post',
     url: teamsUri,
