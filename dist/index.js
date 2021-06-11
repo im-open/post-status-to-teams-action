@@ -2340,7 +2340,11 @@ var require_sendTeamsNotification = __commonJS({
           core2.info(response);
         })
         .catch(function (error) {
-          core2.info(error);
+          if (core2.getInput('fail-on-error') === 'true') {
+            core2.setFailed(error);
+          } else {
+            core2.error(error);
+          }
         });
     }
     module2.exports = { sendTeamsNotification: sendTeamsNotification2 };

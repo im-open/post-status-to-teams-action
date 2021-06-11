@@ -1,4 +1,4 @@
-# Post Build Status to Teams Action
+# Post Status to Teams Action
 
 This action will post a status update to Microsoft Teams.
 
@@ -14,9 +14,10 @@ This action will post a status update to Microsoft Teams.
 | `workflow-type`   | true         | The type of workflow. Default to `Build`. The most common types are `Build` and `Deploy`, but the value isn't restricted so anything can be used. |
 | `teams-uri`       | true         | The Teams webhook URI where notifications are sent. |
 | `custom-facts`    | false        | JSON-parseable string defining a list of objects with name and value to display on the facts table. |
-| `custom-actions`  | false        | JSON-parseable string defining a list of objects with name and uri to include in the list of actions. |
-| `timezone`        | true         | A valid database timezone name, e.g. America/Denver. Defaults to `UTC`. |
+| `custom-actions`  | false        | JSON-parseable string defining a list of objects with name and uri to include in the list of action buttons at the bottom of the card. |
+| `timezone`        | false        | A valid database timezone name, e.g. America/Denver. Defaults to `UTC`. |
 | `environment`     | false        | Name of the environment. Won't be included if none. |
+| `fail-on-error`   | false        | When set to true will return an exit code 1 should the action fail to send the Teams notification. Default to `false`. |
 
 
 ## Example
@@ -32,7 +33,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Send Successful Build Notification
-        uses: ./
+        uses: im-open/microsoft-teams-status-update-action@v1
         with:
           title: Successful build
           workflow-status: success
@@ -52,7 +53,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Send Successful Deploy Notification
-        uses: ./
+        uses: im-open/microsoft-teams-status-update-action@v1
         with:
           title: Successfully deployed
           workflow-status: success
@@ -92,4 +93,4 @@ This project has adopted the [im-open's Code of Conduct](https://github.com/im-o
 
 ## License
 
-Copyright &copy; 2021, Extend Health, LLC. Code released under the [MIT license].
+Copyright &copy; 2021, Extend Health, LLC. Code released under the [MIT license](LICENSE).

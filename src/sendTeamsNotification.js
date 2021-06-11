@@ -14,7 +14,11 @@ function sendTeamsNotification(teamsUri, body) {
       core.info(response);
     })
     .catch(function (error) {
-      core.info(error);
+      if (core.getInput('fail-on-error') === 'true') {
+        core.setFailed(error);
+      } else {
+        core.error(error);
+      }
     });
 }
 
