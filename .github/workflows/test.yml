@@ -1,0 +1,54 @@
+name: Test Pushing to Teams
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Test Successful Build Notification
+        uses: ./
+        with:
+          title: Successfully built the thing
+          workflow-status: success
+          workflow-type: Build
+          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          timezone: America/Denver
+
+      - name: Test Failed Build Notification
+        uses: ./
+        with:
+          title: Failed to build the thing
+          workflow-status: failure
+          workflow-type: Build
+          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          timezone: America/Denver
+
+      - name: Test Successful Deploy Notification
+        uses: ./
+        with:
+          title: Successfully deployed the thing
+          workflow-status: success
+          workflow-type: Deploy
+          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          timezone: America/Denver
+          custom-facts: |
+            [
+              { "name": "Custom Fact", "value": "Number 1" },
+              { "name": "Custom Fact", "value": "Number 2" }
+            ]
+
+      - name: Test Failed Deploy Notification
+        uses: ./
+        with:
+          title: Failed to deploy the thing
+          workflow-status: failure
+          workflow-type: Deploy
+          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          timezone: America/Denver
+          custom-actions: |
+            [
+              { "name": "Go to Google", "uri": "https://www.google.com/" }
+            ]
