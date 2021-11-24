@@ -1,15 +1,17 @@
 # Post Status to Teams Action
 
 This action will post a status update to Microsoft Teams.
+    
+## Index 
 
-  - [Layout](#layout)
-  - [Inputs](#inputs)
-  - [Example](#example)
-  - [Contributing](#contributing)
-    - [Recompiling](#recompiling)
-    - [Incrementing the Version](#incrementing-the-version)
-  - [Code of Conduct](#code-of-conduct)
-  - [License](#license)
+- [Layout](#layout)
+- [Inputs](#inputs)
+- [Example](#example)
+- [Contributing](#contributing)
+  - [Recompiling](#recompiling)
+  - [Incrementing the Version](#incrementing-the-version)
+- [Code of Conduct](#code-of-conduct)
+- [License](#license)
 
 ## Layout
 
@@ -42,7 +44,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Send Successful Build Notification
-        uses: im-open/post-status-to-teams-action@v1.0.1
+        uses: im-open/post-status-to-teams-action@v1.0.2
         with:
           title: Successful build
           workflow-status: success
@@ -81,6 +83,7 @@ jobs:
 ```
 
 ## Contributing
+
 When creating new PRs please ensure:
 1. The action has been recompiled.  See the [Recompiling](#recompiling) section below for more details.
 2. For major or minor changes, at least one of the commit messages contains the appropriate `+semver:` keywords listed under [Incrementing the Version](#incrementing-the-version).
@@ -120,3 +123,5 @@ This project has adopted the [im-open's Code of Conduct](https://github.com/im-o
 ## License
 
 Copyright &copy; 2021, Extend Health, LLC. Code released under the [MIT license](LICENSE).
+
+[git-version-lite]: https://github.com/im-open/git-version-lite
