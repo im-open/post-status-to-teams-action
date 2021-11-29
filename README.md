@@ -64,7 +64,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Send Successful Deploy Notification
-        uses: im-open/post-status-to-teams-action@v1.0.1
+        uses: im-open/post-status-to-teams-action@v1.0.2
         with:
           title: Successfully deployed
           workflow-status: success
