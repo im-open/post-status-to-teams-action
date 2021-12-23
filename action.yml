@@ -38,7 +38,7 @@ inputs:
     required: false
     default: 'false'
   include-default-facts:
-    description: 'A flag determining whether or not to include the default facts. True and false are the exprected values. The default facts are event type, status, and the repository and branch url.'
+    description: 'A flag determining whether or not to include the default facts. True and false are the expected values. The default facts are event type, status, and the repository and branch url.'
     required: false
     default: 'true'
 
