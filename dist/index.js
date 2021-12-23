@@ -8669,6 +8669,15 @@ var require_sections = __commonJS({
     var { context } = require_github();
     var { getActions } = require_actions();
     function getGeneralFacts() {
+      const includeGeneralFacts = core2.getInput('include-default-facts', {
+        required: false
+      });
+      if (
+        includeGeneralFacts &&
+        includeGeneralFacts.toLowerCase() === 'false'
+      ) {
+        return [];
+      }
       const status = core2.getInput('workflow-status', { required: true });
       const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
       const branchUrl = `${repoUrl}/tree/${context.ref}`;
