@@ -7,39 +7,40 @@ inputs:
     description: 'The title of the card posted to Teams.'
     required: true
     default: 'GitHub Actions Workflow Status Update'
-
   workflow-status:
     description: 'The status to report. The values success and failure will result in green and red color indicators (respectively) on the Teams Card. Anything else will result in gray.'
     required: true
-
   workflow-type:
     description: "The type of workflow. The most common types are Build or Deploy, but the value isn't restricted so anything can be used."
     required: true
     default: Build
-
   teams-uri:
     description: 'The Teams webhook URI where notifications are sent.'
     required: true
-
   custom-facts:
     description: 'JSON-parseable string defining a list of objects with name and value to display on the facts table.'
     required: false
-    default: null
-
+    default: ''
   custom-actions:
     description: 'JSON-parseable string defining a list of objects with name and uri to include in the list of actions.'
     required: false
-    default: null
-
+    default: ''
   timezone:
     description: 'A valid database timezone name, e.g. America/Denver.'
     required: true
     default: 'UTC'
-
   environment:
     description: "Name of the environment. Won't be included if none."
     required: false
-    default: null
+    default: ''
+  fail-on-error:
+    description: 'When set to true will return an exit code 1 should the action fail to send the Teams notification. Default to `false`.'
+    required: false
+    default: 'false'
+  include-default-facts:
+    description: 'A flag determining whether or not to include the default facts. True and false are the expected values. The default facts are event type, status, and the repository and branch url.'
+    required: false
+    default: 'true'
 
 runs:
   using: 'node12'

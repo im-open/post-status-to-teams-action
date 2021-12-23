@@ -52,3 +52,17 @@ jobs:
             [
               { "name": "Go to Google", "uri": "https://www.google.com/" }
             ]
+
+      - name: Test Successful Deploy Notification Without Default Facts
+        uses: ./
+        with:
+          title: Successfully deployed the thing
+          workflow-status: success
+          workflow-type: Deploy
+          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          timezone: America/Denver
+          include-default-facts: 'false'
+          custom-facts: |
+            [
+              { "name": "A fact I do want", "value": "Yes please" }
+            ]

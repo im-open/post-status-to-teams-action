@@ -3,6 +3,14 @@ const { context } = require('@actions/github');
 const { getActions } = require('./actions');
 
 function getGeneralFacts() {
+  const includeGeneralFacts = core.getInput('include-default-facts', {
+    required: false
+  });
+
+  if (includeGeneralFacts && includeGeneralFacts.toLowerCase() === 'false') {
+    return [];
+  }
+
   const status = core.getInput('workflow-status', { required: true });
   const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
   const branchUrl = `${repoUrl}/tree/${context.ref}`;
