@@ -48,10 +48,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Send Successful Build Notification
-        uses: im-open/post-status-to-teams-action@v1.1.4
+        uses: im-open/post-status-to-teams-action@v1.2.0
         with:
           title: Successful build
           workflow-status: success
@@ -68,10 +68,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Send Successful Build Notification
-        uses: im-open/post-status-to-teams-action@v1.1.4
+        uses: im-open/post-status-to-teams-action@v1.2.0
         with:
           title: Successful build
           workflow-status: success
@@ -89,10 +89,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Send Successful Deploy Notification
-        uses: im-open/post-status-to-teams-action@v1.1.4
+        uses: im-open/post-status-to-teams-action@v1.2.0
         with:
           title: Successfully deployed
           workflow-status: success
