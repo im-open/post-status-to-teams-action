@@ -20914,7 +20914,13 @@ var require_sections = __commonJS({
       }
       const status = core2.getInput('workflow-status', { required: true });
       const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
-      const branchUrl = `${repoUrl}/tree/${context.ref}`;
+      let ref = context.ref;
+      if (ref.startsWith('refs/pull/')) {
+        ref = ref.substring('refs/'.length);
+      } else {
+        ref = `tree/${ref}`;
+      }
+      const branchUrl = `${repoUrl}/${ref}`;
       const generalFacts = [
         {
           name: 'Event Type: ',
@@ -20925,7 +20931,7 @@ var require_sections = __commonJS({
           value: `\`${status}\``
         },
         {
-          name: 'Repository & branch: ',
+          name: 'Ref: ',
           value: `[${branchUrl}](${branchUrl})`
         }
       ];
