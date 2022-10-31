@@ -3,11 +3,11 @@ const { context } = require('@actions/github');
 const { getActions } = require('./actions');
 
 function getGeneralFacts() {
-  const includeGeneralFacts = core.getInput('include-default-facts', {
+  const includeGeneralFacts = core.getBooleanInput('include-default-facts', {
     required: false
   });
 
-  if (includeGeneralFacts && includeGeneralFacts.toLowerCase() === 'false') {
+  if (!includeGeneralFacts) {
     return [];
   }
 
@@ -72,8 +72,8 @@ function getTheFacts() {
 }
 
 function getSections() {
-  const workflowType = core.getInput('workflow-type');
-  const workflowStatus = core.getInput('workflow-status');
+  const workflowType = core.getInput('workflow-type', { required: true });
+  const workflowStatus = core.getInput('workflow-status', { required: true });
   const timeZone = core.getInput('timezone');
   const section = {
     activityTitle: `${workflowType} ${workflowStatus}`,
