@@ -2,8 +2,8 @@ const core = require('@actions/core');
 const { getSections } = require('./sections');
 
 function getInitialMessageBody() {
-  const title = core.getInput('title');
-  const workflowStatus = core.getInput('workflow-status');
+  const title = core.getInput('title', { required: true });
+  const workflowStatus = core.getInput('workflow-status', { required: true });
   let themeColor = 'cccccc'; //gray
 
   if (workflowStatus == 'success') {

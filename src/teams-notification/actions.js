@@ -18,7 +18,7 @@ function getCustomActions() {
 }
 
 function getActions() {
-  const workflowType = core.getInput('workflow-type');
+  const workflowType = core.getInput('workflow-type', { required: true });
   const generalActions = [
     {
       '@context': 'http://schema.org',
