@@ -51,6 +51,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Send Successful Build Notification
+      # You may also reference just the major or major.minor version
         uses: im-open/post-status-to-teams-action@v1.3.2
         with:
           title: Successful build
