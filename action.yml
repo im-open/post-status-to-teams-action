@@ -1,6 +1,5 @@
-name: 'Post status update to MS Teams'
-
-description: 'Posts a status update to Teams.'
+name: Post status update to MS Teams
+description: Posts a status update to Teams.
 
 inputs:
   title:
