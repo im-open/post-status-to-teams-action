@@ -54,7 +54,7 @@ jobs:
 
       - name: Send Successful Build Notification
       # You may also reference just the major or major.minor version
-        uses: im-open/post-status-to-teams-action@v1.3.5
+        uses: im-open/post-status-to-teams-action@v1.4.0
         with:
           title: Successful build
           workflow-status: success
@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Send Successful Build Notification
-        uses: im-open/post-status-to-teams-action@v1.3.5
+        uses: im-open/post-status-to-teams-action@v1.4.0
         with:
           title: Successful build
           workflow-status: success
@@ -97,7 +97,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Send Successful Deploy Notification
-        uses: im-open/post-status-to-teams-action@v1.3.5
+        uses: im-open/post-status-to-teams-action@v1.4.0
         with:
           title: Successfully deployed
           workflow-status: success
@@ -163,7 +163,7 @@ This project has adopted the [im-open's Code of Conduct](https://github.com/im-o
 
 ## License
 
-Copyright &copy; 2023, Extend Health, LLC. Code released under the [MIT license](LICENSE).
+Copyright &copy; 2024, Extend Health, LLC. Code released under the [MIT license](LICENSE).
 
 <!-- Links -->
 [Incrementing the Version]: #incrementing-the-version
