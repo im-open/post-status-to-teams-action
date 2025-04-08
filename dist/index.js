@@ -16158,32 +16158,31 @@ var require_axios = __commonJS({
 // src/sendTeamsNotification.js
 var require_sendTeamsNotification = __commonJS({
   'src/sendTeamsNotification.js'(exports2, module2) {
-    const fetch = require('node-fetch');
+    async function sendTeamsNotification(teamsUri, adaptiveCardBody) {
+      const payload = {
+        attachments: [
+          {
+            contentType: 'application/vnd.microsoft.card.adaptive',
+            content: adaptiveCardBody
+          }
+        ]
+      };
 
-async function sendTeamsNotification(teamsUri, adaptiveCardBody) {
-  const payload = {
-    attachments: [
-      {
-        contentType: 'application/vnd.microsoft.card.adaptive',
-        content: adaptiveCardBody
+      const response = await fetch(teamsUri, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.text(); // Optional: Log response body for debugging
+        throw new Error(`Failed to send notification to Teams: ${response.statusText}. Response: ${errorBody}`);
       }
-    ]
-  };
+    }
 
-  const response = await fetch(teamsUri, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to send notification to Teams: ${response.statusText}`);
-  }
-}
-
-module.exports = { sendTeamsNotification };
+    module.exports = { sendTeamsNotification };
   }
 });
 
