@@ -31743,16 +31743,28 @@ var require_sections = __commonJS({
       const workflowStatus = core2.getInput('workflow-status', {
         required: true
       });
-      const timeZone = core2.getInput('timezone');
-      const section = {
-        activityTitle: `${workflowType} ${workflowStatus}`,
-        activitySubtitle: new Date().toLocaleString('en-us', {
+      const timeZone = core2.getInput('timezone') || 'UTC'; // Default to UTC if not provided
+
+      let formattedDate;
+      try {
+        formattedDate = new Date().toLocaleString('en-us', {
           timeZone
-        }),
-        facts: getTheFacts(),
-        potentialAction: getActions()
-      };
-      return [section];
+        });
+      } catch (error) {
+        console.warn(`Invalid timezone provided: ${timeZone}. Falling back to UTC.`);
+        formattedDate = new Date().toLocaleString('en-us', {
+          timeZone: 'UTC'
+       });
+    }
+
+    const section = {
+      activityTitle: `${workflowType} ${workflowStatus}`,
+      activitySubtitle: formattedDate,
+      facts: getTheFacts(),
+      potentialAction: getActions()
+    };
+  
+    return [section];
     }
     module2.exports = { getSections };
   }
