@@ -31761,31 +31761,69 @@ var require_getTeamsNotificationBody = __commonJS({
   'src/teams-notification/getTeamsNotificationBody.js'(exports2, module2) {
     var core2 = require_core();
     var { getSections } = require_sections();
-    function getInitialMessageBody() {
+    function getInitialAdaptiveCardBody() {
       const title = core2.getInput('title', { required: true });
-      const workflowStatus = core2.getInput('workflow-status', {
-        required: true
-      });
-      let themeColor = 'cccccc';
-      if (workflowStatus == 'success') {
-        themeColor = '2ea44f';
-      } else if (workflowStatus == 'failure') {
-        themeColor = 'cb2431';
-      }
+      const workflowStatus = core2.getInput('workflow-status', { required: true });
+      const themeColor = workflowStatus === 'success' ? 'good' : workflowStatus === 'failure' ? 'attention' : 'default';
+    
       return {
-        '@type': 'MessageCard',
-        themeColor,
-        summary: 'GitHub Actions Workflow Status',
-        title
+        type: 'AdaptiveCard',
+        $schema: 'http://adaptivecards.io/schemas/adaptive-card.json',
+        version: '1.4',
+        body: [
+          {
+            type: 'TextBlock',
+            text: title,
+            weight: 'Bolder',
+            size: 'Large',
+            color: themeColor
+          },
+          {
+            type: 'TextBlock',
+            text: `Workflow Status: ${workflowStatus}`,
+            wrap: true
+          }
+        ]
       };
     }
     function getTeamsNotificationBody2() {
-      const notificationBody = {
-        ...getInitialMessageBody(),
-        sections: getSections()
-      };
-      return notificationBody;
+      const adaptiveCardBody = getInitialAdaptiveCardBody();
+      const sections = getSections();
+    
+      // Add sections as additional content in the Adaptive Card
+      sections.forEach(section => {
+        adaptiveCardBody.body.push({
+          type: 'TextBlock',
+          text: section.activityTitle,
+          weight: 'Bolder',
+          spacing: 'Medium'
+        });
+    
+        if (section.facts && section.facts.length > 0) {
+          adaptiveCardBody.body.push({
+            type: 'FactSet',
+            facts: section.facts.map(fact => ({
+              title: fact.name,
+              value: fact.value
+            }))
+          });
+        }
+    
+        if (section.potentialAction && section.potentialAction.length > 0) {
+          adaptiveCardBody.body.push({
+            type: 'ActionSet',
+            actions: section.potentialAction.map(action => ({
+              type: 'Action.OpenUrl',
+              title: action.name,
+              url: action.target[0]
+            }))
+          });
+        }
+      });
+    
+      return adaptiveCardBody;
     }
+    
     module2.exports = { getTeamsNotificationBody: getTeamsNotificationBody2 };
   }
 });
