@@ -1,6 +1,6 @@
-var core = require_core();
-var { sendTeamsNotification } = require_sendTeamsNotification();
-var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
+const core = require('@actions/core'); // Standard Node.js require for @actions/core
+const { sendTeamsNotification } = require('./sendTeamsNotification'); // Relative path to sendTeamsNotification.js
+const { getTeamsNotificationBody } = require('./getTeamsNotificationBody'); // Relative path to getTeamsNotificationBody.js
 
 function run() {
   const notificationBody = getTeamsNotificationBody();
