@@ -31779,11 +31779,6 @@ var require_getTeamsNotificationBody = __commonJS({
             weight: 'Bolder',
             size: 'Large',
             color: themeColor
-          },
-          {
-            type: 'TextBlock',
-            text: `Workflow Status: ${workflowStatus}`,
-            wrap: true
           }
         ]
       };
