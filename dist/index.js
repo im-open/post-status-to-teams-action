@@ -31808,6 +31808,14 @@ var require_getTeamsNotificationBody = __commonJS({
           spacing: 'Medium'
         });
     
+        // Add the activitySubtitle (formatted date with timezone)
+        adaptiveCardBody.body.push({
+          type: 'TextBlock',
+          text: section.activitySubtitle, // This includes the formatted date and timezone
+          spacing: 'Small',
+          isSubtle: true // Optional: Makes the text appear less prominent
+        });
+
         if (section.facts && section.facts.length > 0) {
           adaptiveCardBody.body.push({
             type: 'FactSet',
