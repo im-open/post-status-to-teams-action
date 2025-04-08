@@ -1,6 +1,9 @@
-const core = require('@actions/core'); // Standard Node.js require for @actions/core
-const { sendTeamsNotification } = require('./sendTeamsNotification'); // Relative path to sendTeamsNotification.js
-const { getTeamsNotificationBody } = require('./getTeamsNotificationBody'); // Relative path to getTeamsNotificationBody.js
+const core = require('@actions/core');
+const { sendTeamsNotification } = require('./sendTeamsNotification');
+const { getTeamsNotificationBody } = require('./getTeamsNotificationBody');
+
+// Debugging: Log the imported sendTeamsNotification function
+console.log('sendTeamsNotification:', sendTeamsNotification);
 
 function run() {
   const notificationBody = getTeamsNotificationBody();

@@ -16182,7 +16182,7 @@ var require_sendTeamsNotification = __commonJS({
       }
     }
 
-    module.exports = { sendTeamsNotification };
+    module2.exports = { sendTeamsNotification };
   }
 });
 
