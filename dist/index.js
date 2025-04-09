@@ -31788,9 +31788,8 @@ var require_getTeamsNotificationBody = __commonJS({
           {
             type: 'Container',
             items: [],
-            style: 'default',
-            backgroundColor: themeColor, // Use the theme color for the bar
-            height: '5px' // Thin bar to simulate a border
+            style: themeColor === 'good' ? 'emphasis' : themeColor === 'attention' ? 'warning' : 'default',
+            height: 'stretch' // Use stretch to simulate a border
           },
           {
             type: 'TextBlock',
