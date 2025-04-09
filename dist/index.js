@@ -31850,17 +31850,21 @@ var require_getTeamsNotificationBody = __commonJS({
 });
 
 // src/main.js
-var core = require_core();
-var { sendTeamsNotification } = require_sendTeamsNotification();
-var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
+const core = require('@actions/core');
+const { sendTeamsNotification } = require('./sendTeamsNotification');
+const { getTeamsNotificationBody } = require('./getTeamsNotificationBody');
+
+// Debugging: Log the imported sendTeamsNotification function
+console.log('sendTeamsNotification:', sendTeamsNotification);
+
 function run() {
   const notificationBody = getTeamsNotificationBody();
   const teamsUri = core.getInput('teams-uri', { required: true });
 
-  console.log(JSON.stringify(notificationBody, null, 2));
-
+  // Send the Adaptive Card payload
   sendTeamsNotification(teamsUri, notificationBody);
 }
+
 run();
 /*!
  * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
