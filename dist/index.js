@@ -31778,7 +31778,7 @@ var require_getTeamsNotificationBody = __commonJS({
     function getInitialAdaptiveCardBody() {
       const title = core2.getInput('title', { required: true });
       const workflowStatus = core2.getInput('workflow-status', { required: true });
-      const themeColor = workflowStatus === 'success' ? 'good' : workflowStatus === 'failure' ? 'attention' : 'default';
+      const themeColor = workflowStatus === 'success' ? 'good' : workflowStatus === 'failure' ? 'attention' : 'accent';
     
       return {
         type: 'AdaptiveCard',
