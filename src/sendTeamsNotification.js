@@ -17,9 +17,9 @@ async function sendTeamsNotification(teamsUri, adaptiveCardBody) {
   });
 
   if (!response.ok) {
-    const errorBody = await response.text();
+    const errorBody = await response.text(); // Optional: Log response body for debugging
     throw new Error(`Failed to send notification to Teams: ${response.statusText}. Response: ${errorBody}`);
   }
 }
 
-module.exports = { sendTeamsNotification };
+module2.exports = { sendTeamsNotification };
