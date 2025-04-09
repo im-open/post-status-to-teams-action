@@ -31786,12 +31786,6 @@ var require_getTeamsNotificationBody = __commonJS({
         version: '1.4',
         body: [
           {
-            type: 'Container',
-            items: [],
-            style: themeColor === 'good' ? 'emphasis' : themeColor === 'attention' ? 'warning' : 'default',
-            height: 'stretch' // Use stretch to simulate a border
-          },
-          {
             type: 'TextBlock',
             text: title,
             weight: 'Bolder',
