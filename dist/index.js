@@ -31852,6 +31852,9 @@ var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
 function run() {
   const notificationBody = getTeamsNotificationBody();
   const teamsUri = core.getInput('teams-uri', { required: true });
+
+  console.log(JSON.stringify(notificationBody, null, 2));
+
   sendTeamsNotification(teamsUri, notificationBody);
 }
 run();
