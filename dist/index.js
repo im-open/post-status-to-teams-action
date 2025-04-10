@@ -31932,16 +31932,16 @@ var require_getTeamsNotificationBody = __commonJS({
                               color: 'default'
                             }
                           ],
-                          spacing: 'Small',
-                          padding: 'Default'
+                          spacing: 'None', // Reduce spacing inside the container
+                          padding: 'Small' // Reduce padding around the text
                         }
                       ]
                     }
                   ]
                 }
               ],
-              spacing: 'Small',
-              padding: 'Default'
+              spacing: 'Small', // Reduce spacing between rows
+              padding: 'None' // Remove extra padding around the entire row
             });
           });
         }
