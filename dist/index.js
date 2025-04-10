@@ -31893,62 +31893,15 @@ var require_getTeamsNotificationBody = __commonJS({
           isSubtle: true
         });
     
-        // Render general facts as Container elements
+        // Render facts using FactSet
         if (section.facts && section.facts.length > 0) {
           console.log('Adding Facts to Adaptive Card:', section.facts);
-          section.facts.forEach(fact => {
-            adaptiveCardBody.body.push({
-              type: 'Container',
-              items: [
-                {
-                  type: 'ColumnSet',
-                  columns: [
-                    {
-                      type: 'Column',
-                      width: 'auto',
-                      items: [
-                        {
-                          type: 'TextBlock',
-                          text: fact.title, // Title
-                          wrap: true,
-                          weight: 'Bolder',
-                          spacing: 'Small'
-                        }
-                      ]
-                    },
-                    {
-                      type: 'Column',
-                      width: 'stretch',
-                      items: [
-                        {
-                          type: 'Container',
-                          items: [
-                            {
-                              type: 'TextBlock',
-                              text: fact.value, // Value
-                              wrap: true,
-                              weight: 'Default',
-                              color: 'default'
-                            }
-                          ],
-                          spacing: 'None', // No extra spacing inside the container
-                          padding: 'Small', // Minimal padding around the text
-                          style: null, // Remove default emphasis style
-                          backgroundImage: null, // No background image
-                          border: {
-                            color: '#D1D1D1', // Light gray border color
-                            thickness: '1px' // Thin border
-                          },
-                          backgroundColor: '#F3F3F3' // Light gray background for the button-like box
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ],
-              spacing: 'Small', // Reduce spacing between rows
-              padding: 'None' // Remove extra padding around the entire row
-            });
+          adaptiveCardBody.body.push({
+            type: 'FactSet',
+            facts: section.facts.map(fact => ({
+              title: fact.title,
+              value: fact.value
+            }))
           });
         }
     
