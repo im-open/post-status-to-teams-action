@@ -31911,7 +31911,7 @@ var require_getTeamsNotificationBody = __commonJS({
           });
         }
       });
-      console.log('Final Adaptive Card Body:', adaptiveCardBody);
+      console.log('Final Adaptive Card Body:', JSON.stringify(adaptiveCardBody, null, 2));
       return adaptiveCardBody;
     }
     

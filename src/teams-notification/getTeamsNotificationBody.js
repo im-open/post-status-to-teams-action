@@ -66,7 +66,7 @@ var core2 = require_core();
           });
         }
       });
-      console.log('Final Adaptive Card Body:', adaptiveCardBody);
+      console.log('Final Adaptive Card Body:', JSON.stringify(adaptiveCardBody, null, 2));
       return adaptiveCardBody;
     }
     
