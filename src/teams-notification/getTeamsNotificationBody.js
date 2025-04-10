@@ -61,7 +61,7 @@ var core2 = require_core();
                   type: 'Action.OpenUrl',
                   title: action.name,
                   url: action.target[0],
-                  style: 'negative'
+                  style: 'destructive'
                 }
               ],
               spacing: 'Medium'
