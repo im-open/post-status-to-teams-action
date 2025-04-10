@@ -81,7 +81,7 @@ var core2 = require_core();
                             }
                           ],
                           spacing: 'None', // Reduce spacing inside the container
-                          padding: 'Small' // Reduce padding around the text
+                          padding: 'None' // Reduce padding around the text
                         }
                       ]
                     }
