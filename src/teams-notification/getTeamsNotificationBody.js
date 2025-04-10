@@ -53,19 +53,15 @@ var core2 = require_core();
         }
     
         if (section.potentialAction && section.potentialAction.length > 0) {
-          section.potentialAction.forEach(action => {
-            adaptiveCardBody.body.push({
-              type: 'ActionSet',
-              actions: [
-                {
-                  type: 'Action.OpenUrl',
-                  title: action.name,
-                  url: action.target[0],
-                  style: 'positive'
-                }
-              ],
-              spacing: 'Medium'
-            });
+          adaptiveCardBody.body.push({
+            type: 'ActionSet',
+            actions: section.potentialAction.map(action => ({
+              type: 'Action.OpenUrl',
+              title: action.name,
+              url: action.target[0],
+              style: 'positive' // Optional: Teams-specific styling for buttons
+            })),
+            spacing: 'Medium'
           });
         }
       });
