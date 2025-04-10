@@ -34,22 +34,32 @@ var core2 = require_core();
           spacing: 'Medium'
         });
     
-        // Add the activitySubtitle (formatted date with timezone)
         adaptiveCardBody.body.push({
           type: 'TextBlock',
-          text: section.activitySubtitle, // This includes the formatted date and timezone
+          text: section.activitySubtitle,
           spacing: 'Small',
-          isSubtle: true // Optional: Makes the text appear less prominent
+          isSubtle: true
         });
-
+    
+        // Render general facts as Container elements
         if (section.facts && section.facts.length > 0) {
-          console.log('Adding Facts to Adaptive Card:', section.facts)
-          adaptiveCardBody.body.push({
-            type: 'FactSet',
-            facts: section.facts.map(fact => ({
-              title: fact.name,
-              value: fact.value
-            }))
+          console.log('Adding Facts to Adaptive Card:', section.facts);
+          section.facts.forEach(fact => {
+            adaptiveCardBody.body.push({
+              type: 'Container',
+              style: 'emphasis', // Adds a border and background
+              items: [
+                {
+                  type: 'TextBlock',
+                  text: `${fact.title}: ${fact.value}`,
+                  wrap: true,
+                  weight: 'Bolder',
+                  color: 'default'
+                }
+              ],
+              spacing: 'Small',
+              padding: 'Default'
+            });
           });
         }
     
@@ -60,12 +70,13 @@ var core2 = require_core();
               type: 'Action.OpenUrl',
               title: action.name,
               url: action.target[0],
-              style: 'positive' // Optional: Teams-specific styling for buttons
+              style: 'positive'
             })),
             spacing: 'Medium'
           });
         }
       });
+    
       console.log('Final Adaptive Card Body:', JSON.stringify(adaptiveCardBody, null, 2));
       return adaptiveCardBody;
     }
