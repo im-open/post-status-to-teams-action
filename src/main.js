@@ -8,9 +8,11 @@ async function run() {
   const failOnError = core.getBooleanInput('fail-on-error', { required: false });
 
   try {
-    await sendTeamsNotification(teamsUri, notificationBody);
-    console.log('Notification sent successfully.');
+    // Wait for the sendTeamsNotification function to complete
+    const result = await sendTeamsNotification(teamsUri, notificationBody);
+    console.log(result); // Log the success message
   } catch (error) {
+    // Handle errors based on the fail-on-error input
     if (failOnError) {
       core.setFailed(`Action failed with error: ${error.message}`);
     } else {

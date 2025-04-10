@@ -16158,37 +16158,65 @@ var require_axios = __commonJS({
 // src/sendTeamsNotification.js
 var require_sendTeamsNotification = __commonJS({
   'src/sendTeamsNotification.js'(exports2, module2) {
-    async function sendTeamsNotification(teamsUri, adaptiveCardBody) {
-      const payload = {
-        attachments: [
-          {
-            contentType: 'application/vnd.microsoft.card.adaptive',
-            content: adaptiveCardBody
-          }
-        ]
-      };
-    
-      try {
-        const response = await fetch(teamsUri, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-    
-        if (!response.ok) {
-          const errorBody = await response.text(); // Optional: Log response body for debugging
-          throw new Error(`Failed to send notification to Teams: ${response.statusText}. Response: ${errorBody}`);
-        }
-      } catch (error) {
-        // Log the error for debugging purposes
-        console.error(`Error in sendTeamsNotification: ${error.message}`);
-        throw error; // Re-throw the error to be handled by the caller
+    const https = require('https');
+
+async function sendTeamsNotification(teamsUri, adaptiveCardBody) {
+  const payload = JSON.stringify({
+    attachments: [
+      {
+        contentType: 'application/vnd.microsoft.card.adaptive',
+        content: adaptiveCardBody
       }
-    }
-    
-    module2.exports = { sendTeamsNotification };
+    ]
+  });
+
+  return new Promise((resolve, reject) => {
+    const url = new URL(teamsUri);
+
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let responseBody = '';
+
+      // Collect response data
+      res.on('data', (chunk) => {
+        responseBody += chunk;
+      });
+
+      // Handle the end of the response
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(`Notification sent successfully. Status: ${res.statusCode}`);
+        } else {
+          reject(
+            new Error(
+              `Failed to send notification to Teams. HTTP Status: ${res.statusCode} - ${res.statusMessage}. Response: ${responseBody}`
+            )
+          );
+        }
+      });
+    });
+
+    // Handle request errors
+    req.on('error', (error) => {
+      reject(new Error(`Error in sendTeamsNotification: ${error.message}`));
+    });
+
+    // Write the payload and end the request
+    req.write(payload);
+    req.end();
+  });
+}
+
+module2.exports = { sendTeamsNotification };
   }
 });
 
@@ -31867,9 +31895,11 @@ async function run() {
   const failOnError = core.getBooleanInput('fail-on-error', { required: false });
 
   try {
-    await sendTeamsNotification(teamsUri, notificationBody);
-    console.log('Notification sent successfully.');
+    // Wait for the sendTeamsNotification function to complete
+    const result = await sendTeamsNotification(teamsUri, notificationBody);
+    console.log(result); // Log the success message
   } catch (error) {
+    // Handle errors based on the fail-on-error input
     if (failOnError) {
       core.setFailed(`Action failed with error: ${error.message}`);
     } else {
