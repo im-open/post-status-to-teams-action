@@ -39,7 +39,7 @@ function getGeneralFacts() {
     weight: 'Bolder'
   };
 
-  return { generalFacts, statusFact };
+  return generalFacts;
 }
 function getConditionalFacts() {
   const conditionalFacts = [];
@@ -71,9 +71,7 @@ function getTheFacts() {
 }
 function getSections() {
   const workflowType = core2.getInput('workflow-type', { required: true });
-  const workflowStatus = core2.getInput('workflow-status', {
-    required: true
-  });
+  const workflowStatus = core2.getInput('workflow-status', {required: true });
   const timeZone = core2.getInput('timezone') || 'UTC'; // Default to UTC if not provided
 
   let formattedDate;
@@ -86,12 +84,21 @@ function getSections() {
     formattedDate = new Date().toLocaleString('en-us', { timeZone: 'UTC' });
    }
 
-  const { generalFacts, statusFact } = getGeneralFacts();
+  const generalFacts = getGeneralFacts();
+  const status = core2.getInput('workflow-status', { required: true });
+  const statusFact = {
+    type: 'TextBlock',
+    text: `Status: \`${status}\``,
+    color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
+    wrap: true,
+    weight: 'Bolder'
+  };
 
   const section = {
     activityTitle: `${workflowType} ${workflowStatus}`,
     activitySubtitle: formattedDate,
-    facts: getTheFacts(),
+    facts: [...generalFacts, ...getConditionalFacts(), ...getTheFacts()],
+    statusFact, // Add the styled Status fact
     potentialAction: getActions()
   };
   return [section];
