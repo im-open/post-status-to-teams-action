@@ -31922,7 +31922,6 @@ var require_getTeamsNotificationBody = __commonJS({
                       items: [
                         {
                           type: 'Container',
-                          style: 'emphasis', // Adds a border and background
                           items: [
                             {
                               type: 'TextBlock',
@@ -31932,8 +31931,15 @@ var require_getTeamsNotificationBody = __commonJS({
                               color: 'default'
                             }
                           ],
-                          spacing: 'None', // Reduce spacing inside the container
-                          padding: 'None' // Reduce padding around the text
+                          spacing: 'None', // No extra spacing inside the container
+                          padding: 'Small', // Minimal padding around the text
+                          style: null, // Remove default emphasis style
+                          backgroundImage: null, // No background image
+                          border: {
+                            color: '#D1D1D1', // Light gray border color
+                            thickness: '1px' // Thin border
+                          },
+                          backgroundColor: '#F3F3F3' // Light gray background for the button-like box
                         }
                       ]
                     }
