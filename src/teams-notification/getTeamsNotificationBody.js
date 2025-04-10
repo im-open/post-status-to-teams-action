@@ -55,11 +55,14 @@ var core2 = require_core();
         if (section.potentialAction && section.potentialAction.length > 0) {
           section.potentialAction.forEach(action => {
             adaptiveCardBody.body.push({
-              type: 'TextBlock',
-              text: `[${action.name}](${action.target[0]})`, // Hyperlink format
-              color: 'accent', // Makes the text blue
-              weight: 'Bolder', // Optional: Makes the text bold
-              wrap: true, // Ensures the text wraps if it's too long
+              type: 'ActionSet',
+              actions: [
+                {
+                  type: 'Action.OpenUrl',
+                  title: action.name,
+                  url: action.target[0]
+                }
+              ],
               spacing: 'Medium'
             });
           });
