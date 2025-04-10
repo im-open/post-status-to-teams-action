@@ -31892,15 +31892,25 @@ var require_getTeamsNotificationBody = __commonJS({
         if (section.facts && section.facts.length > 0) {
           console.log('Adding Facts to Adaptive Card:', section.facts);
           section.facts.forEach(fact => {
+            // Add the title as a separate TextBlock
+            adaptiveCardBody.body.push({
+              type: 'TextBlock',
+              text: fact.title, // Only the title
+              wrap: true,
+              weight: 'Bolder',
+              spacing: 'Small'
+            });
+    
+            // Add the value inside a Container with a border
             adaptiveCardBody.body.push({
               type: 'Container',
               style: 'emphasis', // Adds a border and background
               items: [
                 {
                   type: 'TextBlock',
-                  text: `${fact.title}: ${fact.value}`,
+                  text: fact.value, // Only the value
                   wrap: true,
-                  weight: 'Bolder',
+                  weight: 'Default',
                   color: 'default'
                 }
               ],
