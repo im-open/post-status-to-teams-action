@@ -2,15 +2,13 @@ var core2 = require_core();
 var { context } = require_github();
 var { getActions } = require_actions();
 function getGeneralFacts() {
-  const includeGeneralFacts = core2.getBooleanInput(
-    'include-default-facts',
-    {
-      required: false
-    }
-  );
+  const includeGeneralFacts = core2.getBooleanInput('include-default-facts', {
+    required: false
+  });
   if (!includeGeneralFacts) {
     return [];
   }
+
   const status = core2.getInput('workflow-status', { required: true });
   const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
   let ref = context.ref;
@@ -20,20 +18,55 @@ function getGeneralFacts() {
     ref = `tree/${ref}`;
   }
   const branchUrl = `${repoUrl}/${ref}`;
+
   const generalFacts = [
     {
-      name: 'Event Type: ',
-      value: `\`${context.eventName}\``
+      type: 'Container',
+      items: [
+        {
+          type: 'TextBlock',
+          text: `Event Type: \`${context.eventName}\``,
+          wrap: true,
+          weight: 'Bolder',
+          color: 'default'
+        }
+      ],
+      style: 'emphasis', // Adds a background and border
+      spacing: 'Small',
+      padding: 'Default'
     },
     {
-      name: 'Status: ',
-      value: `\`${status}\``
+      type: 'Container',
+      items: [
+        {
+          type: 'TextBlock',
+          text: `Status: \`${status}\``,
+          wrap: true,
+          weight: 'Bolder',
+          color: 'default'
+        }
+      ],
+      style: 'emphasis', // Adds a background and border
+      spacing: 'Small',
+      padding: 'Default'
     },
     {
-      name: 'Ref: ',
-      value: `[${branchUrl}](${branchUrl})`
+      type: 'Container',
+      items: [
+        {
+          type: 'TextBlock',
+          text: `Ref: [${branchUrl}](${branchUrl})`,
+          wrap: true,
+          weight: 'Bolder',
+          color: 'accent'
+        }
+      ],
+      style: 'emphasis', // Adds a background and border
+      spacing: 'Small',
+      padding: 'Default'
     }
   ];
+
   return generalFacts;
 }
 function getConditionalFacts() {
