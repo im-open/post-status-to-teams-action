@@ -31892,7 +31892,7 @@ var require_getTeamsNotificationBody = __commonJS({
         if (section.facts && section.facts.length > 0) {
           console.log('Adding Facts to Adaptive Card:', section.facts);
           section.facts.forEach(fact => {
-            // Add the title as a separate TextBlock
+            // Add the title as a plain TextBlock
             if (fact.title) {
               adaptiveCardBody.body.push({
                 type: 'TextBlock',
