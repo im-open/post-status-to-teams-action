@@ -16167,21 +16167,27 @@ var require_sendTeamsNotification = __commonJS({
           }
         ]
       };
-
-      const response = await fetch(teamsUri, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        const errorBody = await response.text(); // Optional: Log response body for debugging
-        throw new Error(`Failed to send notification to Teams: ${response.statusText}. Response: ${errorBody}`);
+    
+      try {
+        const response = await fetch(teamsUri, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+    
+        if (!response.ok) {
+          const errorBody = await response.text(); // Optional: Log response body for debugging
+          throw new Error(`Failed to send notification to Teams: ${response.statusText}. Response: ${errorBody}`);
+        }
+      } catch (error) {
+        // Log the error for debugging purposes
+        console.error(`Error in sendTeamsNotification: ${error.message}`);
+        throw error; // Re-throw the error to be handled by the caller
       }
     }
-
+    
     module2.exports = { sendTeamsNotification };
   }
 });
@@ -31854,12 +31860,24 @@ var require_getTeamsNotificationBody = __commonJS({
 var core = require_core();
 var { sendTeamsNotification } = require_sendTeamsNotification();
 var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
-function run() {
+
+async function run() {
   const notificationBody = getTeamsNotificationBody();
   const teamsUri = core.getInput('teams-uri', { required: true });
+  const failOnError = core.getBooleanInput('fail-on-error', { required: false });
 
-  sendTeamsNotification(teamsUri, notificationBody);
+  try {
+    await sendTeamsNotification(teamsUri, notificationBody);
+    console.log('Notification sent successfully.');
+  } catch (error) {
+    if (failOnError) {
+      core.setFailed(`Action failed with error: ${error.message}`);
+    } else {
+      core.warning(`Action encountered an error but will continue: ${error.message}`);
+    }
+  }
 }
+
 run();
 /*!
  * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
