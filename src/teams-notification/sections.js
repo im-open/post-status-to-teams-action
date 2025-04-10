@@ -1,55 +1,42 @@
 var core2 = require_core();
 var { context } = require_github();
 var { getActions } = require_actions();
-function getTeamsNotificationBody2() {
-  const adaptiveCardBody = getInitialAdaptiveCardBody();
-  const sections = getSections();
-
-  // Add sections as additional content in the Adaptive Card
-  sections.forEach(section => {
-    adaptiveCardBody.body.push({
-      type: 'TextBlock',
-      text: section.activityTitle,
-      weight: 'Bolder',
-      spacing: 'Medium'
-    });
-
-    adaptiveCardBody.body.push({
-      type: 'TextBlock',
-      text: section.activitySubtitle,
-      spacing: 'Small',
-      isSubtle: true
-    });
-
-    // Render facts using FactSet
-    if (section.facts && section.facts.length > 0) {
-      console.log('Adding Facts to Adaptive Card:', section.facts);
-      adaptiveCardBody.body.push({
-        type: 'FactSet',
-        facts: section.facts.map(fact => ({
-          title: fact.title,
-          value: fact.value
-        }))
-      });
-    }
-
-    // Add potential actions
-    if (section.potentialAction && section.potentialAction.length > 0) {
-      adaptiveCardBody.body.push({
-        type: 'ActionSet',
-        actions: section.potentialAction.map(action => ({
-          type: 'Action.OpenUrl',
-          title: action.name,
-          url: action.target[0],
-          style: 'positive'
-        })),
-        spacing: 'Medium'
-      });
-    }
+function getGeneralFacts() {
+  const includeGeneralFacts = core2.getBooleanInput('include-default-facts', {
+    required: false
   });
+  if (!includeGeneralFacts) {
+    console.log('General facts are disabled (include-default-facts is false).');
+    return [];
+  }
 
-  console.log('Final Adaptive Card Body:', JSON.stringify(adaptiveCardBody, null, 2));
-  return adaptiveCardBody;
+  const status = core2.getInput('workflow-status', { required: true });
+  const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
+  let ref = context.ref;
+  if (ref.startsWith('refs/pull/')) {
+    ref = ref.substring('refs/'.length);
+  } else {
+    ref = `tree/${ref}`;
+  }
+  const branchUrl = `${repoUrl}/${ref}`;
+
+  const generalFacts = [
+    {
+      title: 'Event Type',
+      value: `\`${context.eventName}\``
+    },
+    {
+      title: 'Status',
+      value: `\`${status}\``
+    },
+    {
+      title: 'Ref',
+      value: `[${branchUrl}](${branchUrl})`
+    }
+  ];
+
+  console.log('Generated General Facts:', JSON.stringify(generalFacts, null, 2));
+  return generalFacts;
 }
 function getConditionalFacts() {
   const conditionalFacts = [];
