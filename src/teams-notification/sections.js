@@ -26,21 +26,20 @@ function getGeneralFacts() {
       value: `\`${context.eventName}\``
     },
     {
-      title: 'Status',
-      value: {
-        type: 'TextBlock',
-        text: `\`${status}\``,
-        color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
-        wrap: true
-      }
-    },
-    {
       title: 'Ref',
       value: `[${branchUrl}](${branchUrl})`
     }
   ];
 
-  return generalFacts;
+  const statusFact = {
+    type: 'TextBlock',
+    text: `Status: \`${status}\``,
+    color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
+    wrap: true,
+    weight: 'Bolder'
+  };
+
+  return { generalFacts, statusFact };
 }
 function getConditionalFacts() {
   const conditionalFacts = [];
@@ -84,17 +83,17 @@ function getSections() {
     });
   } catch (error) {
     console.warn(`Invalid timezone provided: ${timeZone}. Falling back to UTC.`);
-    formattedDate = new Date().toLocaleString('en-us', {
-      timeZone: 'UTC'
-   });
-}
+    formattedDate = new Date().toLocaleString('en-us', { timeZone: 'UTC' });
+   }
 
-const section = {
-  activityTitle: `${workflowType} ${workflowStatus}`,
-  activitySubtitle: formattedDate,
-  facts: getTheFacts(),
-  potentialAction: getActions()
-};
-return [section];
+  const { generalFacts, statusFact } = getGeneralFacts();
+
+  const section = {
+    activityTitle: `${workflowType} ${workflowStatus}`,
+    activitySubtitle: formattedDate,
+    facts: getTheFacts(),
+    potentialAction: getActions()
+  };
+  return [section];
 }
 module2.exports = { getSections };

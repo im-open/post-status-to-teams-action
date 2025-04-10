@@ -40,6 +40,11 @@ var core2 = require_core();
           spacing: 'Small',
           isSubtle: true
         });
+
+        // Render the styled Status fact
+        if (section.statusFact) {
+          adaptiveCardBody.body.push(section.statusFact);
+        }
     
         // Render facts using FactSet
         if (section.facts && section.facts.length > 0) {
