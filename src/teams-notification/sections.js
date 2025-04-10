@@ -1,76 +1,55 @@
 var core2 = require_core();
 var { context } = require_github();
 var { getActions } = require_actions();
-function getGeneralFacts() {
-  const includeGeneralFacts = core2.getBooleanInput('include-default-facts', {
-    required: false
-  });
-  if (!includeGeneralFacts) {
-    console.log('General facts are disabled (include-default-facts is false).');
-    return [];
-  }
+function getTeamsNotificationBody2() {
+  const adaptiveCardBody = getInitialAdaptiveCardBody();
+  const sections = getSections();
 
-  const status = core2.getInput('workflow-status', { required: true });
-  const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
-  let ref = context.ref;
-  if (ref.startsWith('refs/pull/')) {
-    ref = ref.substring('refs/'.length);
-  } else {
-    ref = `tree/${ref}`;
-  }
-  const branchUrl = `${repoUrl}/${ref}`;
+  // Add sections as additional content in the Adaptive Card
+  sections.forEach(section => {
+    adaptiveCardBody.body.push({
+      type: 'TextBlock',
+      text: section.activityTitle,
+      weight: 'Bolder',
+      spacing: 'Medium'
+    });
 
-  const generalFacts = [
-    {
-      type: 'Container',
-      items: [
-        {
-          type: 'TextBlock',
-          text: `Event Type: \`${context.eventName}\``,
-          wrap: true,
-          weight: 'Bolder',
-          color: 'default'
-        }
-      ],
-      style: 'emphasis',
+    adaptiveCardBody.body.push({
+      type: 'TextBlock',
+      text: section.activitySubtitle,
       spacing: 'Small',
-      padding: 'Default'
-    },
-    {
-      type: 'Container',
-      items: [
-        {
-          type: 'TextBlock',
-          text: `Status: \`${status}\``,
-          wrap: true,
-          weight: 'Bolder',
-          color: 'default'
-        }
-      ],
-      style: 'emphasis',
-      spacing: 'Small',
-      padding: 'Default'
-    },
-    {
-      type: 'Container',
-      items: [
-        {
-          type: 'TextBlock',
-          text: `Ref: [${branchUrl}](${branchUrl})`,
-          wrap: true,
-          weight: 'Bolder',
-          color: 'accent'
-        }
-      ],
-      style: 'emphasis',
-      spacing: 'Small',
-      padding: 'Default'
+      isSubtle: true
+    });
+
+    // Render facts using FactSet
+    if (section.facts && section.facts.length > 0) {
+      console.log('Adding Facts to Adaptive Card:', section.facts);
+      adaptiveCardBody.body.push({
+        type: 'FactSet',
+        facts: section.facts.map(fact => ({
+          title: fact.title,
+          value: fact.value
+        }))
+      });
     }
-  ];
 
-  // Updated console.log to output JSON format
-  console.log('Generated General Facts:', JSON.stringify(generalFacts, null, 2));
-  return generalFacts;
+    // Add potential actions
+    if (section.potentialAction && section.potentialAction.length > 0) {
+      adaptiveCardBody.body.push({
+        type: 'ActionSet',
+        actions: section.potentialAction.map(action => ({
+          type: 'Action.OpenUrl',
+          title: action.name,
+          url: action.target[0],
+          style: 'positive'
+        })),
+        spacing: 'Medium'
+      });
+    }
+  });
+
+  console.log('Final Adaptive Card Body:', JSON.stringify(adaptiveCardBody, null, 2));
+  return adaptiveCardBody;
 }
 function getConditionalFacts() {
   const conditionalFacts = [];
