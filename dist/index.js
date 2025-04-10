@@ -31778,7 +31778,6 @@ var require_sections = __commonJS({
         ...(customFactsArray || []) // Custom facts
       ];
     
-      console.log('All Facts:', JSON.stringify(allFacts, null, 2));
       return allFacts;
     }
     function getSections() {
