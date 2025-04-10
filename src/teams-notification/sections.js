@@ -22,20 +22,54 @@ function getGeneralFacts() {
 
   const generalFacts = [
     {
-      name: 'Event Type',
-      value: context.eventName
+      type: 'Container',
+      items: [
+        {
+          type: 'TextBlock',
+          text: `Event Type: \`${context.eventName}\``,
+          wrap: true,
+          weight: 'Bolder',
+          color: 'default'
+        }
+      ],
+      style: 'emphasis',
+      spacing: 'Small',
+      padding: 'Default'
     },
     {
-      name: 'Status',
-      value: status
+      type: 'Container',
+      items: [
+        {
+          type: 'TextBlock',
+          text: `Status: \`${status}\``,
+          wrap: true,
+          weight: 'Bolder',
+          color: 'default'
+        }
+      ],
+      style: 'emphasis',
+      spacing: 'Small',
+      padding: 'Default'
     },
     {
-      name: 'Ref',
-      value: `[${branchUrl}](${branchUrl})`
+      type: 'Container',
+      items: [
+        {
+          type: 'TextBlock',
+          text: `Ref: [${branchUrl}](${branchUrl})`,
+          wrap: true,
+          weight: 'Bolder',
+          color: 'accent'
+        }
+      ],
+      style: 'emphasis',
+      spacing: 'Small',
+      padding: 'Default'
     }
   ];
 
-  console.log('Generated General Facts:', generalFacts);
+  // Updated console.log to output JSON format
+  console.log('Generated General Facts:', JSON.stringify(generalFacts, null, 2));
   return generalFacts;
 }
 function getConditionalFacts() {
