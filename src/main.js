@@ -4,6 +4,7 @@ var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
 
 async function run() {
   const notificationBody = getTeamsNotificationBody();
+  console.log('Notification Body:', notificationBody); // Add this log to verify
   const teamsUri = core.getInput('teams-uri', { required: true });
   const failOnError = core.getBooleanInput('fail-on-error', { required: false });
 

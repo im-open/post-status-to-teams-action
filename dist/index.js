@@ -31720,6 +31720,7 @@ var require_sections = __commonJS({
         required: false
       });
       if (!includeGeneralFacts) {
+        console.log('General facts are disabled (include-default-facts is false).');
         return [];
       }
     
@@ -31745,7 +31746,7 @@ var require_sections = __commonJS({
               color: 'default'
             }
           ],
-          style: 'emphasis', // Adds a background and border
+          style: 'emphasis',
           spacing: 'Small',
           padding: 'Default'
         },
@@ -31760,7 +31761,7 @@ var require_sections = __commonJS({
               color: 'default'
             }
           ],
-          style: 'emphasis', // Adds a background and border
+          style: 'emphasis',
           spacing: 'Small',
           padding: 'Default'
         },
@@ -31775,7 +31776,7 @@ var require_sections = __commonJS({
               color: 'accent'
             }
           ],
-          style: 'emphasis', // Adds a background and border
+          style: 'emphasis',
           spacing: 'Small',
           padding: 'Default'
         }
@@ -31910,7 +31911,7 @@ var require_getTeamsNotificationBody = __commonJS({
           });
         }
       });
-    
+      console.log('Final Adaptive Card Body:', adaptiveCardBody);
       return adaptiveCardBody;
     }
     
@@ -31925,6 +31926,7 @@ var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
 
 async function run() {
   const notificationBody = getTeamsNotificationBody();
+  console.log('Notification Body:', notificationBody); // Add this log to verify
   const teamsUri = core.getInput('teams-uri', { required: true });
   const failOnError = core.getBooleanInput('fail-on-error', { required: false });
 

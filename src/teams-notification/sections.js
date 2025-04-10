@@ -6,6 +6,7 @@ function getGeneralFacts() {
     required: false
   });
   if (!includeGeneralFacts) {
+    console.log('General facts are disabled (include-default-facts is false).');
     return [];
   }
 
@@ -31,7 +32,7 @@ function getGeneralFacts() {
           color: 'default'
         }
       ],
-      style: 'emphasis', // Adds a background and border
+      style: 'emphasis',
       spacing: 'Small',
       padding: 'Default'
     },
@@ -46,7 +47,7 @@ function getGeneralFacts() {
           color: 'default'
         }
       ],
-      style: 'emphasis', // Adds a background and border
+      style: 'emphasis',
       spacing: 'Small',
       padding: 'Default'
     },
@@ -61,7 +62,7 @@ function getGeneralFacts() {
           color: 'accent'
         }
       ],
-      style: 'emphasis', // Adds a background and border
+      style: 'emphasis',
       spacing: 'Small',
       padding: 'Default'
     }
