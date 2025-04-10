@@ -31741,7 +31741,12 @@ var require_sections = __commonJS({
         },
         {
           title: 'Status',
-          value: `\`${status}\``
+          value: {
+            type: 'TextBlock',
+            text: `\`${status}\``,
+            color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
+            wrap: true
+          }
         },
         {
           title: 'Ref',
