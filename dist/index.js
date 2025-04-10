@@ -31804,7 +31804,6 @@ var require_sections = __commonJS({
       facts: getTheFacts(),
       potentialAction: getActions()
     };
-    console.log('Generated Section:', section);
     return [section];
     }
     module2.exports = { getSections };
@@ -31859,7 +31858,6 @@ var require_getTeamsNotificationBody = __commonJS({
     
         // Render facts using FactSet
         if (section.facts && section.facts.length > 0) {
-          console.log('Adding Facts to Adaptive Card:', section.facts);
           adaptiveCardBody.body.push({
             type: 'FactSet',
             facts: section.facts.map(fact => ({

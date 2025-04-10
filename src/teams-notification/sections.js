@@ -90,7 +90,6 @@ const section = {
   facts: getTheFacts(),
   potentialAction: getActions()
 };
-console.log('Generated Section:', section);
 return [section];
 }
 module2.exports = { getSections };

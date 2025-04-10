@@ -43,7 +43,6 @@ var core2 = require_core();
     
         // Render facts using FactSet
         if (section.facts && section.facts.length > 0) {
-          console.log('Adding Facts to Adaptive Card:', section.facts);
           adaptiveCardBody.body.push({
             type: 'FactSet',
             facts: section.facts.map(fact => ({
