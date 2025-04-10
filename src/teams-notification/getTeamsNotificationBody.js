@@ -43,6 +43,7 @@ var core2 = require_core();
         });
 
         if (section.facts && section.facts.length > 0) {
+          console.log('Adding Facts to Adaptive Card:', section.facts)
           adaptiveCardBody.body.push({
             type: 'FactSet',
             facts: section.facts.map(fact => ({
@@ -65,7 +66,7 @@ var core2 = require_core();
           });
         }
       });
-    
+      console.log('Final Adaptive Card Body:', adaptiveCardBody);
       return adaptiveCardBody;
     }
     

@@ -67,6 +67,7 @@ function getGeneralFacts() {
     }
   ];
 
+  console.log('Generated General Facts:', generalFacts);
   return generalFacts;
 }
 function getConditionalFacts() {
@@ -85,11 +86,13 @@ function getTheFacts() {
   const customFactsArray = customFactsInput
     ? JSON.parse(customFactsInput)
     : [];
-  return [
+  const allFacts = [
     ...getGeneralFacts(),
     ...getConditionalFacts(),
     ...(customFactsArray || [])
   ];
+  console.log('All Facts:', allFacts);
+  return allFacts;
 }
 function getSections() {
   const workflowType = core2.getInput('workflow-type', { required: true });
@@ -116,7 +119,7 @@ const section = {
   facts: getTheFacts(),
   potentialAction: getActions()
 };
-
+console.log('Generated Section:', section);
 return [section];
 }
 module2.exports = { getSections };

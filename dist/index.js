@@ -31781,6 +31781,7 @@ var require_sections = __commonJS({
         }
       ];
     
+      console.log('Generated General Facts:', generalFacts);
       return generalFacts;
     }
     function getConditionalFacts() {
@@ -31799,11 +31800,13 @@ var require_sections = __commonJS({
       const customFactsArray = customFactsInput
         ? JSON.parse(customFactsInput)
         : [];
-      return [
-        ...getGeneralFacts(),
-        ...getConditionalFacts(),
-        ...(customFactsArray || [])
-      ];
+        const allFacts = [
+          ...getGeneralFacts(),
+          ...getConditionalFacts(),
+          ...(customFactsArray || [])
+        ];
+        console.log('All Facts:', allFacts);
+        return allFacts;
     }
     function getSections() {
       const workflowType = core2.getInput('workflow-type', { required: true });
@@ -31830,7 +31833,7 @@ var require_sections = __commonJS({
       facts: getTheFacts(),
       potentialAction: getActions()
     };
-  
+    console.log('Generated Section:', section);
     return [section];
     }
     module2.exports = { getSections };
