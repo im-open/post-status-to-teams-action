@@ -31870,7 +31870,7 @@ var require_getTeamsNotificationBody = __commonJS({
                   type: 'Action.OpenUrl',
                   title: action.name,
                   url: action.target[0],
-                  style: 'positive'
+                  style: 'negative'
                 }
               ],
               spacing: 'Medium'
