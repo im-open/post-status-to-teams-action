@@ -45,35 +45,47 @@ var core2 = require_core();
         if (section.facts && section.facts.length > 0) {
           console.log('Adding Facts to Adaptive Card:', section.facts);
           section.facts.forEach(fact => {
-            // Add the title as a plain TextBlock
-            if (fact.title) {
-              adaptiveCardBody.body.push({
-                type: 'TextBlock',
-                text: fact.title, // Only the title
-                wrap: true,
-                weight: 'Bolder',
-                spacing: 'Small'
-              });
-            }
-    
-            // Add the value inside a Container with a border
-            if (fact.value) {
-              adaptiveCardBody.body.push({
-                type: 'Container',
-                style: 'emphasis', // Adds a border and background
-                items: [
-                  {
-                    type: 'TextBlock',
-                    text: fact.value, // Only the value
-                    wrap: true,
-                    weight: 'Default',
-                    color: 'default'
-                  }
-                ],
-                spacing: 'Small',
-                padding: 'Default'
-              });
-            }
+            // Render title and value in a single row using a ColumnSet
+            adaptiveCardBody.body.push({
+              type: 'Container',
+              items: [
+                {
+                  type: 'ColumnSet',
+                  columns: [
+                    {
+                      type: 'Column',
+                      width: 'auto',
+                      items: [
+                        {
+                          type: 'TextBlock',
+                          text: fact.title, // Title
+                          wrap: true,
+                          weight: 'Bolder',
+                          spacing: 'Small'
+                        }
+                      ]
+                    },
+                    {
+                      type: 'Column',
+                      width: 'stretch',
+                      items: [
+                        {
+                          type: 'TextBlock',
+                          text: fact.value, // Value
+                          wrap: true,
+                          weight: 'Default',
+                          color: 'default',
+                          spacing: 'Small'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              spacing: 'Small',
+              padding: 'Default',
+              style: 'emphasis' // Optional: Adds a border and background
+            });
           });
         }
     
