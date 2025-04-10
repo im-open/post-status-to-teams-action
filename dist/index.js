@@ -31749,7 +31749,6 @@ var require_sections = __commonJS({
         }
       ];
     
-      console.log('Generated General Facts:', JSON.stringify(generalFacts, null, 2));
       return generalFacts;
     }
     function getConditionalFacts() {
@@ -31885,7 +31884,6 @@ var require_getTeamsNotificationBody = __commonJS({
         }
       });
     
-      console.log('Final Adaptive Card Body:', JSON.stringify(adaptiveCardBody, null, 2));
       return adaptiveCardBody;
     }
     
@@ -31900,7 +31898,6 @@ var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
 
 async function run() {
   const notificationBody = getTeamsNotificationBody();
-  console.log('Notification Body:', notificationBody); // Add this log to verify
   const teamsUri = core.getInput('teams-uri', { required: true });
   const failOnError = core.getBooleanInput('fail-on-error', { required: false });
 

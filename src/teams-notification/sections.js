@@ -35,7 +35,6 @@ function getGeneralFacts() {
     }
   ];
 
-  console.log('Generated General Facts:', JSON.stringify(generalFacts, null, 2));
   return generalFacts;
 }
 function getConditionalFacts() {
