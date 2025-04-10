@@ -31897,7 +31897,6 @@ var require_getTeamsNotificationBody = __commonJS({
         if (section.facts && section.facts.length > 0) {
           console.log('Adding Facts to Adaptive Card:', section.facts);
           section.facts.forEach(fact => {
-            // Render title and value in a single row using a ColumnSet
             adaptiveCardBody.body.push({
               type: 'Container',
               items: [
@@ -31922,12 +31921,19 @@ var require_getTeamsNotificationBody = __commonJS({
                       width: 'stretch',
                       items: [
                         {
-                          type: 'TextBlock',
-                          text: fact.value, // Value
-                          wrap: true,
-                          weight: 'Default',
-                          color: 'default',
-                          spacing: 'Small'
+                          type: 'Container',
+                          style: 'emphasis', // Adds a border and background
+                          items: [
+                            {
+                              type: 'TextBlock',
+                              text: fact.value, // Value
+                              wrap: true,
+                              weight: 'Default',
+                              color: 'default'
+                            }
+                          ],
+                          spacing: 'Small',
+                          padding: 'Default'
                         }
                       ]
                     }
@@ -31935,8 +31941,7 @@ var require_getTeamsNotificationBody = __commonJS({
                 }
               ],
               spacing: 'Small',
-              padding: 'Default',
-              style: 'emphasis' // Optional: Adds a border and background
+              padding: 'Default'
             });
           });
         }
