@@ -3,7 +3,7 @@ var core2 = require_core();
     function getInitialAdaptiveCardBody() {
       const title = core2.getInput('title', { required: true });
       const workflowStatus = core2.getInput('workflow-status', { required: true });
-      const themeColor = workflowStatus === 'success' ? 'good' : workflowStatus === 'failure' ? 'attention' : 'accent';
+      const themeColor = workflowStatus === 'success' ? 'good' : workflowStatus === 'failure' ? 'attention' : 'default';
     
       return {
         type: 'AdaptiveCard',
@@ -15,7 +15,8 @@ var core2 = require_core();
             text: title,
             weight: 'Bolder',
             size: 'Large',
-            color: themeColor
+            color: themeColor,
+            isSubtle: themeColor === 'default' // Apply subtle styling for non-success/failure statuses
           }
         ]
       };

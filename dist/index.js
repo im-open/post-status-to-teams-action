@@ -31790,7 +31790,8 @@ var require_getTeamsNotificationBody = __commonJS({
             text: title,
             weight: 'Bolder',
             size: 'Large',
-            color: themeColor
+            color: themeColor,
+            isSubtle: themeColor === 'default' // Apply subtle styling for non-success/failure statuses
           }
         ]
       };
