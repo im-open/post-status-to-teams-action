@@ -86,14 +86,19 @@ function getConditionalFacts() {
 function getTheFacts() {
   const customFactsInput = core2.getInput('custom-facts');
   const customFactsArray = customFactsInput
-    ? JSON.parse(customFactsInput)
+    ? JSON.parse(customFactsInput).map(fact => ({
+        title: fact.name || 'Custom Fact', // Use a default title if missing
+        value: fact.value || ''
+      }))
     : [];
+
   const allFacts = [
-    ...getGeneralFacts(),
-    ...getConditionalFacts(),
-    ...(customFactsArray || [])
+    ...getGeneralFacts(), // General facts
+    ...getConditionalFacts(), // Conditional facts
+    ...(customFactsArray || []) // Custom facts
   ];
-  console.log('All Facts:', allFacts);
+
+  console.log('All Facts:', JSON.stringify(allFacts, null, 2));
   return allFacts;
 }
 function getSections() {

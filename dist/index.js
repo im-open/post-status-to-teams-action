@@ -31800,15 +31800,20 @@ var require_sections = __commonJS({
     function getTheFacts() {
       const customFactsInput = core2.getInput('custom-facts');
       const customFactsArray = customFactsInput
-        ? JSON.parse(customFactsInput)
+        ? JSON.parse(customFactsInput).map(fact => ({
+            title: fact.name || 'Custom Fact', // Use a default title if missing
+            value: fact.value || ''
+          }))
         : [];
-        const allFacts = [
-          ...getGeneralFacts(),
-          ...getConditionalFacts(),
-          ...(customFactsArray || [])
-        ];
-        console.log('All Facts:', allFacts);
-        return allFacts;
+    
+      const allFacts = [
+        ...getGeneralFacts(), // General facts
+        ...getConditionalFacts(), // Conditional facts
+        ...(customFactsArray || []) // Custom facts
+      ];
+    
+      console.log('All Facts:', JSON.stringify(allFacts, null, 2));
+      return allFacts;
     }
     function getSections() {
       const workflowType = core2.getInput('workflow-type', { required: true });
@@ -31902,7 +31907,7 @@ var require_getTeamsNotificationBody = __commonJS({
                 spacing: 'Small'
               });
             }
-        
+    
             // Add the value inside a Container with a border
             if (fact.value) {
               adaptiveCardBody.body.push({
@@ -31924,6 +31929,7 @@ var require_getTeamsNotificationBody = __commonJS({
           });
         }
     
+        // Add potential actions
         if (section.potentialAction && section.potentialAction.length > 0) {
           adaptiveCardBody.body.push({
             type: 'ActionSet',

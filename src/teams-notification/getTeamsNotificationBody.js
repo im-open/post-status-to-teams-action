@@ -55,7 +55,7 @@ var core2 = require_core();
                 spacing: 'Small'
               });
             }
-        
+    
             // Add the value inside a Container with a border
             if (fact.value) {
               adaptiveCardBody.body.push({
@@ -77,6 +77,7 @@ var core2 = require_core();
           });
         }
     
+        // Add potential actions
         if (section.potentialAction && section.potentialAction.length > 0) {
           adaptiveCardBody.body.push({
             type: 'ActionSet',
