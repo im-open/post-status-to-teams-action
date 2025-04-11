@@ -1066,8 +1066,8 @@ var require_tunnel = __commonJS({
 
 // node_modules/tunnel/index.js
 var require_tunnel2 = __commonJS({
-  'node_modules/tunnel/index.js'(exports2, module3) {
-    module3.exports = require_tunnel();
+  'node_modules/tunnel/index.js'(exports2, module2) {
+    module2.exports = require_tunnel();
   }
 });
 
@@ -2566,7 +2566,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
 
 // src/sendTeamsNotification.js
 var require_sendTeamsNotification = __commonJS({
-  'src/sendTeamsNotification.js'() {
+  'src/sendTeamsNotification.js'(exports2, module2) {
     var https = require('https');
     async function sendTeamsNotification2(teamsUri, adaptiveCardBody) {
       const payload = JSON.stringify({
@@ -2620,89 +2620,20 @@ var require_sendTeamsNotification = __commonJS({
 
 // src/teams-notification/getTeamsNotificationBody.js
 var require_getTeamsNotificationBody = __commonJS({
-  'src/teams-notification/getTeamsNotificationBody.js'() {
+  'src/teams-notification/getTeamsNotificationBody.js'(exports2, module2) {
     var core3 = require_core();
     var { getSections } = require_sections();
-    function getInitialAdaptiveCardBody() {
-      const title = core2.getInput('title', { required: true });
-      const workflowStatus = core2.getInput('workflow-status', {
-        required: true
-      });
-      const themeColor =
-        workflowStatus === 'success'
-          ? 'good'
-          : workflowStatus === 'failure'
-          ? 'attention'
-          : 'default';
-      return {
-        type: 'AdaptiveCard',
-        $schema: 'http://adaptivecards.io/schemas/adaptive-card.json',
-        version: '1.4',
-        body: [
-          {
-            type: 'TextBlock',
-            text: title,
-            weight: 'Bolder',
-            size: 'Large',
-            color: themeColor,
-            isSubtle: themeColor === 'default'
-          }
-        ]
-      };
-    }
-    function getTeamsNotificationBody2() {
-      const adaptiveCardBody = getInitialAdaptiveCardBody();
-      const sections = getSections();
-      sections.forEach(section => {
-        adaptiveCardBody.body.push({
-          type: 'TextBlock',
-          text: section.activityTitle,
-          weight: 'Bolder',
-          spacing: 'Medium'
-        });
-        adaptiveCardBody.body.push({
-          type: 'TextBlock',
-          text: section.activitySubtitle,
-          spacing: 'Small',
-          isSubtle: true
-        });
-        if (section.statusFact) {
-          adaptiveCardBody.body.push(section.statusFact);
-        }
-        if (section.facts && section.facts.length > 0) {
-          adaptiveCardBody.body.push({
-            type: 'FactSet',
-            facts: section.facts.map(fact => ({
-              title: fact.title,
-              value: fact.value
-            }))
-          });
-        }
-        if (section.potentialAction && section.potentialAction.length > 0) {
-          adaptiveCardBody.body.push({
-            type: 'ActionSet',
-            actions: section.potentialAction.map(action => ({
-              type: 'Action.OpenUrl',
-              title: action.name,
-              url: action.target[0],
-              style: 'positive'
-            })),
-            spacing: 'Medium'
-          });
-        }
-      });
-      return adaptiveCardBody;
-    }
-    module2.exports = { getTeamsNotificationBody: getTeamsNotificationBody2 };
+    module2.exports = { getTeamsNotificationBody };
   }
 });
 
 // src/main.js
 var core = require_core();
 var { sendTeamsNotification } = require_sendTeamsNotification();
-var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
+var { getTeamsNotificationBody: getTeamsNotificationBody2 } =
+  require_getTeamsNotificationBody();
 async function run() {
-  const notificationBody = getTeamsNotificationBody();
+  const notificationBody = getTeamsNotificationBody2();
   const teamsUri = core.getInput('teams-uri', { required: true });
   const failOnError = core.getBooleanInput('fail-on-error', {
     required: false

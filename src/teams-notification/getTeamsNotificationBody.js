@@ -80,4 +80,4 @@ function getTeamsNotificationBody2() {
   return adaptiveCardBody;
 }
 
-module2.exports = { getTeamsNotificationBody: getTeamsNotificationBody2 };
+module.exports = { getTeamsNotificationBody };
