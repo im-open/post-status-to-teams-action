@@ -31800,13 +31800,23 @@ var require_sections = __commonJS({
     
       const generalFacts = getGeneralFacts();
       const status = core2.getInput('workflow-status', { required: true });
-      const statusFact = {
-        type: 'TextBlock',
-        text: `Status: \`${status}\``,
-        color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
-        wrap: true,
-        weight: 'Bolder'
-      };
+      const statusFact = [
+        {
+          type: 'TextBlock',
+          text: 'Status:', // Title remains in black
+          wrap: true,
+          weight: 'Bolder',
+          spacing: 'Small'
+        },
+        {
+          type: 'TextBlock',
+          text: `\`${status}\``, // Value is styled dynamically
+          color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
+          wrap: true,
+          weight: 'Default',
+          spacing: 'None'
+        }
+      ];
     
       const section = {
         activityTitle: `${workflowType} ${workflowStatus}`,
@@ -31869,7 +31879,9 @@ var require_getTeamsNotificationBody = __commonJS({
 
         // Render the styled Status fact
         if (section.statusFact) {
-          adaptiveCardBody.body.push(section.statusFact);
+          section.statusFact.forEach(fact => {
+            adaptiveCardBody.body.push(fact);
+          });
         }
     
         // Render facts using FactSet
