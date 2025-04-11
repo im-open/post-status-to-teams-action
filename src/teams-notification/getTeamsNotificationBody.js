@@ -1,4 +1,4 @@
-var core2 = require_core();
+const core = require('@actions/core');
 var { getSections } = require_sections();
 function getInitialAdaptiveCardBody() {
   const title = core2.getInput('title', { required: true });

@@ -1,4 +1,4 @@
-var core2 = require_core();
+const core = require('@actions/core');
 var { context } = require_github();
 var { getActions } = require_actions();
 function getGeneralFacts() {

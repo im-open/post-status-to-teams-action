@@ -1,6 +1,6 @@
-var core = require_core();
-var { sendTeamsNotification } = require_sendTeamsNotification();
-var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
+const core = require('@actions/core');
+const { sendTeamsNotification } = require('./sendTeamsNotification');
+const { getTeamsNotificationBody } = require('./teams-notification/getTeamsNotificationBody');
 
 async function run() {
   const notificationBody = getTeamsNotificationBody();
