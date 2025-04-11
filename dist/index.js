@@ -18071,6 +18071,42 @@ var require_github = __commonJS({
   }
 });
 
+// src/teams-notification/actions.js
+var require_actions = __commonJS({
+  'src/teams-notification/actions.js'(exports2, module2) {
+    var core3 = require_core();
+    var { context } = require_github();
+    function getCustomActions() {
+      const customActionsInput = core3.getInput('custom-actions');
+      const customActionsArray = customActionsInput
+        ? JSON.parse(customActionsInput)
+        : [];
+      if (!customActionsArray) return [];
+      return customActionsArray.map(action => ({
+        '@context': 'http://schema.org',
+        '@type': 'ViewAction',
+        name: action.name,
+        target: [action.uri]
+      }));
+    }
+    function getActions() {
+      const workflowType = core3.getInput('workflow-type', { required: true });
+      const generalActions = [
+        {
+          '@context': 'http://schema.org',
+          '@type': 'ViewAction',
+          name: `View ${workflowType} Log`,
+          target: [
+            `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${context.runId}`
+          ]
+        }
+      ];
+      return [...generalActions, ...getCustomActions()];
+    }
+    module2.exports = { getActions };
+  }
+});
+
 // src/teams-notification/sections.js
 var require_sections = __commonJS({
   'src/teams-notification/sections.js'(exports2, module2) {
