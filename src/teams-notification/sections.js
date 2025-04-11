@@ -34,7 +34,12 @@ function getGeneralFacts() {
   const statusFact = {
     type: 'TextBlock',
     text: `Status: \`${status}\``,
-    color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
+    color:
+      status === 'success'
+        ? 'good'
+        : status === 'failure'
+        ? 'attention'
+        : 'default',
     wrap: true,
     weight: 'Bolder'
   };
@@ -67,7 +72,7 @@ function getTheFacts() {
 }
 function getSections() {
   const workflowType = core2.getInput('workflow-type', { required: true });
-  const workflowStatus = core2.getInput('workflow-status', {required: true });
+  const workflowStatus = core2.getInput('workflow-status', { required: true });
   const timeZone = core2.getInput('timezone') || 'UTC'; // Default to UTC if not provided
 
   let formattedDate;
@@ -76,9 +81,11 @@ function getSections() {
       timeZone
     });
   } catch (error) {
-    console.warn(`Invalid timezone provided: ${timeZone}. Falling back to UTC.`);
+    console.warn(
+      `Invalid timezone provided: ${timeZone}. Falling back to UTC.`
+    );
     formattedDate = new Date().toLocaleString('en-us', { timeZone: 'UTC' });
-   }
+  }
 
   const generalFacts = getGeneralFacts();
   const conditionalFacts = getConditionalFacts(); // Get conditional facts
@@ -108,7 +115,12 @@ function getSections() {
           {
             type: 'TextBlock',
             text: `\`${status}\``, // Value is styled dynamically
-            color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
+            color:
+              status === 'success'
+                ? 'good'
+                : status === 'failure'
+                ? 'attention'
+                : 'default',
             wrap: true,
             weight: 'Default',
             spacing: 'Small'

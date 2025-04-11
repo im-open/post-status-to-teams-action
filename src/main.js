@@ -5,7 +5,9 @@ var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
 async function run() {
   const notificationBody = getTeamsNotificationBody();
   const teamsUri = core.getInput('teams-uri', { required: true });
-  const failOnError = core.getBooleanInput('fail-on-error', { required: false });
+  const failOnError = core.getBooleanInput('fail-on-error', {
+    required: false
+  });
 
   try {
     // Wait for the sendTeamsNotification function to complete
@@ -16,7 +18,9 @@ async function run() {
     if (failOnError) {
       core.setFailed(`Action failed with error: ${error.message}`);
     } else {
-      core.warning(`Action encountered an error but will continue: ${error.message}`);
+      core.warning(
+        `Action encountered an error but will continue: ${error.message}`
+      );
     }
   }
 }

@@ -23,11 +23,11 @@ async function sendTeamsNotification(teamsUri, adaptiveCardBody) {
       }
     };
 
-    const req = https.request(options, (res) => {
+    const req = https.request(options, res => {
       let responseBody = '';
 
       // Collect response data
-      res.on('data', (chunk) => {
+      res.on('data', chunk => {
         responseBody += chunk;
       });
 
@@ -46,7 +46,7 @@ async function sendTeamsNotification(teamsUri, adaptiveCardBody) {
     });
 
     // Handle request errors
-    req.on('error', (error) => {
+    req.on('error', error => {
       reject(new Error(`Error in sendTeamsNotification: ${error.message}`));
     });
 
