@@ -18257,17 +18257,86 @@ var require_getTeamsNotificationBody = __commonJS({
   'src/teams-notification/getTeamsNotificationBody.js'(exports2, module2) {
     var core3 = require_core();
     var { getSections } = require_sections();
-    module2.exports = { getTeamsNotificationBody };
+    function getInitialAdaptiveCardBody() {
+      const title = core2.getInput('title', { required: true });
+      const workflowStatus = core2.getInput('workflow-status', {
+        required: true
+      });
+      const themeColor =
+        workflowStatus === 'success'
+          ? 'good'
+          : workflowStatus === 'failure'
+          ? 'attention'
+          : 'default';
+      return {
+        type: 'AdaptiveCard',
+        $schema: 'http://adaptivecards.io/schemas/adaptive-card.json',
+        version: '1.4',
+        body: [
+          {
+            type: 'TextBlock',
+            text: title,
+            weight: 'Bolder',
+            size: 'Large',
+            color: themeColor,
+            isSubtle: themeColor === 'default'
+          }
+        ]
+      };
+    }
+    function getTeamsNotificationBody2() {
+      const adaptiveCardBody = getInitialAdaptiveCardBody();
+      const sections = getSections();
+      sections.forEach(section => {
+        adaptiveCardBody.body.push({
+          type: 'TextBlock',
+          text: section.activityTitle,
+          weight: 'Bolder',
+          spacing: 'Medium'
+        });
+        adaptiveCardBody.body.push({
+          type: 'TextBlock',
+          text: section.activitySubtitle,
+          spacing: 'Small',
+          isSubtle: true
+        });
+        if (section.statusFact) {
+          adaptiveCardBody.body.push(section.statusFact);
+        }
+        if (section.facts && section.facts.length > 0) {
+          adaptiveCardBody.body.push({
+            type: 'FactSet',
+            facts: section.facts.map(fact => ({
+              title: fact.title,
+              value: fact.value
+            }))
+          });
+        }
+        if (section.potentialAction && section.potentialAction.length > 0) {
+          adaptiveCardBody.body.push({
+            type: 'ActionSet',
+            actions: section.potentialAction.map(action => ({
+              type: 'Action.OpenUrl',
+              title: action.name,
+              url: action.target[0],
+              style: 'positive'
+            })),
+            spacing: 'Medium'
+          });
+        }
+      });
+      return adaptiveCardBody;
+    }
+    module2.exports = { getTeamsNotificationBody: getTeamsNotificationBody2 };
   }
 });
 
 // src/main.js
 var core = require_core();
 var { sendTeamsNotification } = require_sendTeamsNotification();
-var { getTeamsNotificationBody: getTeamsNotificationBody2 } =
-  require_getTeamsNotificationBody();
+var { getTeamsNotificationBody } = require_getTeamsNotificationBody();
 async function run() {
-  const notificationBody = getTeamsNotificationBody2();
+  const notificationBody = getTeamsNotificationBody();
   const teamsUri = core.getInput('teams-uri', { required: true });
   const failOnError = core.getBooleanInput('fail-on-error', {
     required: false

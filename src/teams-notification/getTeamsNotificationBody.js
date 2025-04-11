@@ -26,7 +26,7 @@ function getInitialAdaptiveCardBody() {
     ]
   };
 }
-function getTeamsNotificationBody2() {
+function getTeamsNotificationBody() {
   const adaptiveCardBody = getInitialAdaptiveCardBody();
   const sections = getSections();
 
