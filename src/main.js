@@ -1,6 +1,8 @@
 const core = require('@actions/core');
 const { sendTeamsNotification } = require('./sendTeamsNotification');
-const { getTeamsNotificationBody } = require('./teams-notification/getTeamsNotificationBody');
+const {
+  getTeamsNotificationBody
+} = require('./teams-notification/getTeamsNotificationBody');
 
 async function run() {
   const notificationBody = getTeamsNotificationBody();
