@@ -62,7 +62,6 @@ function getTheFacts() {
     : [];
 
   const allFacts = [
-    ...getGeneralFacts(), // General facts
     ...getConditionalFacts(), // Conditional facts
     ...(customFactsArray || []) // Custom facts
   ];
