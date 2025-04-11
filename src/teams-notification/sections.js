@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-var { context } = require_github();
+const { context } = require('@actions/github');
 var { getActions } = require_actions();
 function getGeneralFacts() {
   const includeGeneralFacts = core2.getBooleanInput('include-default-facts', {
