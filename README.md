@@ -37,7 +37,7 @@ This action will post a status update to Microsoft Teams.
 | `timezone`              | false       | UTC     | A valid database time zone name, e.g. America/Denver. Defaults to `UTC`.                                                                                                             |
 | `environment`           | false       | ''      | Name of the environment. Won't be included if none.                                                                                                                                  |
 | `fail-on-error`         | false       | false   | When set to true will return an exit code 1 should the action fail to send the Teams notification. Default to `false`.                                                               |
-| `include-default-facts` | false       | true    | A flag determining whether or not to include the default facts. True and false are the expected values. The default facts are event type, status, and the repository and branch url. |
+| `include-default-facts` | false       | true    | A flag determining whether or not to include the default facts. True and false are the expected values. The default facts are event type and the repository and branch url. Status will always appear whether this is set to true or false. |
 
 ## Usage Examples
 
