@@ -31798,7 +31798,10 @@ var require_sections = __commonJS({
        }
     
       const generalFacts = getGeneralFacts();
+      const conditionalFacts = getConditionalFacts(); // Get conditional facts
+      const customFacts = getTheFacts(); // Get custom facts
       const status = core2.getInput('workflow-status', { required: true });
+      
       const statusFact = {
         type: 'ColumnSet',
         columns: [
@@ -31835,7 +31838,7 @@ var require_sections = __commonJS({
       const section = {
         activityTitle: `${workflowType} ${workflowStatus}`,
         activitySubtitle: formattedDate,
-        facts: [...generalFacts, ...getConditionalFacts(), ...getTheFacts()],
+        facts: [...generalFacts, ...conditionalFacts, ...customFacts], // Combine all facts
         statusFact, // Add the styled Status fact
         potentialAction: getActions()
       };
