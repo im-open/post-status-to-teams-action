@@ -19,9 +19,11 @@ This action will post a status update to Microsoft Teams.
 ## Layout
 
 **Default Layout**
+
 ![](images/Teams_Notification_AdaptiveCard.PNG)
 
 **Layout when include-default-facts is set to false**
+
 ![](images/notification-without-default-facts2.png)
 
 ## Inputs
