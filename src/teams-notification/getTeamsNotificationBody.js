@@ -47,7 +47,6 @@ var core2 = require_core();
         }
     
         // Render facts using FactSet
-        // Comment to trigger change
         if (section.facts && section.facts.length > 0) {
           adaptiveCardBody.body.push({
             type: 'FactSet',
