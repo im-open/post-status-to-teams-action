@@ -46,7 +46,7 @@ function getConditionalFacts() {
   const environment = core2.getInput('environment');
   if (environment) {
     conditionalFacts.push({
-      name: 'Environment: ',
+      title: 'Environment: ',
       value: environment
     });
   }

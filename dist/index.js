@@ -31760,7 +31760,7 @@ var require_sections = __commonJS({
       const environment = core2.getInput('environment');
       if (environment) {
         conditionalFacts.push({
-          name: 'Environment: ',
+          title: 'Environment: ',
           value: environment
         });
       }
@@ -31801,7 +31801,7 @@ var require_sections = __commonJS({
       const conditionalFacts = getConditionalFacts(); // Get conditional facts
       const customFacts = getTheFacts(); // Get custom facts
       const status = core2.getInput('workflow-status', { required: true });
-      
+
       const statusFact = {
         type: 'ColumnSet',
         columns: [
