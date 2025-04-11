@@ -54,7 +54,7 @@ jobs:
 
       - name: Send Successful Build Notification
       # You may also reference just the major or major.minor version
-        uses: im-open/post-status-to-teams-action@v1.4.1
+        uses: im-open/post-status-to-teams-action@v2
         with:
           title: Successful build
           workflow-status: success
@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Send Successful Build Notification
-        uses: im-open/post-status-to-teams-action@v1.4.1
+        uses: im-open/post-status-to-teams-action@v2
         with:
           title: Successful build
           workflow-status: success
@@ -97,7 +97,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Send Successful Deploy Notification
-        uses: im-open/post-status-to-teams-action@v1.4.1
+        uses: im-open/post-status-to-teams-action@v2
         with:
           title: Successfully deployed
           workflow-status: success
