@@ -31775,10 +31775,7 @@ var require_sections = __commonJS({
           }))
         : [];
     
-      const allFacts = [
-        ...getConditionalFacts(), // Conditional facts
-        ...(customFactsArray || []) // Custom facts
-      ];
+      const allFacts = [...(customFactsArray || [])];
     
       return allFacts;
     }

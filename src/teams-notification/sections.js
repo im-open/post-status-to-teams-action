@@ -61,10 +61,7 @@ function getTheFacts() {
       }))
     : [];
 
-  const allFacts = [
-    ...getConditionalFacts(), // Conditional facts
-    ...(customFactsArray || []) // Custom facts
-  ];
+  const allFacts = [...(customFactsArray || [])];
 
   return allFacts;
 }
