@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-var { getSections } = require_sections();
+const { getSections } = require('./sections');
 function getInitialAdaptiveCardBody() {
   const title = core2.getInput('title', { required: true });
   const workflowStatus = core2.getInput('workflow-status', { required: true });

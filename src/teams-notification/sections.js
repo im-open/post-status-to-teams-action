@@ -139,4 +139,4 @@ function getSections() {
   };
   return [section];
 }
-module2.exports = { getSections };
+module.exports = { getSections };

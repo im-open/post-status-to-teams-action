@@ -56,4 +56,4 @@ async function sendTeamsNotification(teamsUri, adaptiveCardBody) {
   });
 }
 
-module2.exports = { sendTeamsNotification };
+module.exports = { sendTeamsNotification };

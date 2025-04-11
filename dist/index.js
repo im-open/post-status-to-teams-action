@@ -2618,6 +2618,151 @@ var require_sendTeamsNotification = __commonJS({
   }
 });
 
+// src/teams-notification/sections.js
+var require_sections = __commonJS({
+  'src/teams-notification/sections.js'(exports2, module2) {
+    var core3 = require_core();
+    var { context } = require_github();
+    var { getActions } = require_actions();
+    function getGeneralFacts() {
+      const includeGeneralFacts = core2.getBooleanInput(
+        'include-default-facts',
+        {
+          required: false
+        }
+      );
+      if (!includeGeneralFacts) {
+        console.log(
+          'General facts are disabled (include-default-facts is false).'
+        );
+        return [];
+      }
+      const status = core2.getInput('workflow-status', { required: true });
+      const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
+      let ref = context.ref;
+      if (ref.startsWith('refs/pull/')) {
+        ref = ref.substring('refs/'.length);
+      } else {
+        ref = `tree/${ref}`;
+      }
+      const branchUrl = `${repoUrl}/${ref}`;
+      const generalFacts = [
+        {
+          title: 'Event Type',
+          value: `\`${context.eventName}\``
+        },
+        {
+          title: 'Ref',
+          value: `[${branchUrl}](${branchUrl})`
+        }
+      ];
+      const statusFact = {
+        type: 'TextBlock',
+        text: `Status: \`${status}\``,
+        color:
+          status === 'success'
+            ? 'good'
+            : status === 'failure'
+            ? 'attention'
+            : 'default',
+        wrap: true,
+        weight: 'Bolder'
+      };
+      return generalFacts;
+    }
+    function getConditionalFacts() {
+      const conditionalFacts = [];
+      const environment = core2.getInput('environment');
+      if (environment) {
+        conditionalFacts.push({
+          title: 'Environment: ',
+          value: environment
+        });
+      }
+      return conditionalFacts;
+    }
+    function getTheFacts() {
+      const customFactsInput = core2.getInput('custom-facts');
+      const customFactsArray = customFactsInput
+        ? JSON.parse(customFactsInput).map(fact => ({
+            title: fact.name || 'Custom Fact',
+            value: fact.value || ''
+          }))
+        : [];
+      const allFacts = [...(customFactsArray || [])];
+      return allFacts;
+    }
+    function getSections() {
+      const workflowType = core2.getInput('workflow-type', { required: true });
+      const workflowStatus = core2.getInput('workflow-status', {
+        required: true
+      });
+      const timeZone = core2.getInput('timezone') || 'UTC';
+      let formattedDate;
+      try {
+        formattedDate = new Date().toLocaleString('en-us', {
+          timeZone
+        });
+      } catch (error) {
+        console.warn(
+          `Invalid timezone provided: ${timeZone}. Falling back to UTC.`
+        );
+        formattedDate = new Date().toLocaleString('en-us', { timeZone: 'UTC' });
+      }
+      const generalFacts = getGeneralFacts();
+      const conditionalFacts = getConditionalFacts();
+      const customFacts = getTheFacts();
+      const status = core2.getInput('workflow-status', { required: true });
+      const statusFact = {
+        type: 'ColumnSet',
+        columns: [
+          {
+            type: 'Column',
+            width: 'auto',
+            items: [
+              {
+                type: 'TextBlock',
+                text: 'Status:',
+                wrap: true,
+                weight: 'Bolder',
+                spacing: 'Small'
+              }
+            ]
+          },
+          {
+            type: 'Column',
+            width: 'auto',
+            items: [
+              {
+                type: 'TextBlock',
+                text: `\`${status}\``,
+                color:
+                  status === 'success'
+                    ? 'good'
+                    : status === 'failure'
+                    ? 'attention'
+                    : 'default',
+                wrap: true,
+                weight: 'Default',
+                spacing: 'Small'
+              }
+            ]
+          }
+        ]
+      };
+      const section = {
+        activityTitle: `${workflowType} ${workflowStatus}`,
+        activitySubtitle: formattedDate,
+        facts: [...generalFacts, ...conditionalFacts, ...customFacts],
+        statusFact,
+        potentialAction: getActions()
+      };
+      return [section];
+    }
+    module2.exports = { getSections };
+  }
+});
+
 // src/teams-notification/getTeamsNotificationBody.js
 var require_getTeamsNotificationBody = __commonJS({
   'src/teams-notification/getTeamsNotificationBody.js'(exports2, module2) {
