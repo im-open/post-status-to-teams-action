@@ -1,6 +1,6 @@
 # Post Status to Teams Action
 
-This action will post a status update to Microsoft Teams. The post is done using Microsoft Teams workflows via an adaptvie card.
+This action will post a status update to Microsoft Teams. The post is done using Microsoft Teams workflows via an adaptive card.
 
 ## Index <!-- omit in toc -->
 
