@@ -86,23 +86,38 @@ function getSections() {
 
   const generalFacts = getGeneralFacts();
   const status = core2.getInput('workflow-status', { required: true });
-  const statusFact = [
-    {
-      type: 'TextBlock',
-      text: 'Status:', // Title remains in black
-      wrap: true,
-      weight: 'Bolder',
-      spacing: 'Small'
-    },
-    {
-      type: 'TextBlock',
-      text: `\`${status}\``, // Value is styled dynamically
-      color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
-      wrap: true,
-      weight: 'Default',
-      spacing: 'None'
-    }
-  ];
+  const statusFact = {
+    type: 'ColumnSet',
+    columns: [
+      {
+        type: 'Column',
+        width: 'auto',
+        items: [
+          {
+            type: 'TextBlock',
+            text: 'Status:', // Title remains in black
+            wrap: true,
+            weight: 'Bolder',
+            spacing: 'Small'
+          }
+        ]
+      },
+      {
+        type: 'Column',
+        width: 'auto',
+        items: [
+          {
+            type: 'TextBlock',
+            text: `\`${status}\``, // Value is styled dynamically
+            color: status === 'success' ? 'good' : status === 'failure' ? 'attention' : 'default',
+            wrap: true,
+            weight: 'Default',
+            spacing: 'Small'
+          }
+        ]
+      }
+    ]
+  };
 
   const section = {
     activityTitle: `${workflowType} ${workflowStatus}`,

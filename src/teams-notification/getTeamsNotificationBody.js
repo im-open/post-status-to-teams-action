@@ -43,9 +43,7 @@ var core2 = require_core();
 
         // Render the styled Status fact
         if (section.statusFact) {
-          section.statusFact.forEach(fact => {
-            adaptiveCardBody.body.push(fact);
-          });
+          adaptiveCardBody.body.push(section.statusFact);
         }
     
         // Render facts using FactSet
