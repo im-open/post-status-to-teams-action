@@ -18074,10 +18074,10 @@ var require_github = __commonJS({
 // src/teams-notification/actions.js
 var require_actions = __commonJS({
   'src/teams-notification/actions.js'(exports2, module2) {
-    var core3 = require_core();
+    var core2 = require_core();
     var { context } = require_github();
     function getCustomActions() {
-      const customActionsInput = core3.getInput('custom-actions');
+      const customActionsInput = core2.getInput('custom-actions');
       const customActionsArray = customActionsInput
         ? JSON.parse(customActionsInput)
         : [];
@@ -18090,7 +18090,7 @@ var require_actions = __commonJS({
       }));
     }
     function getActions() {
-      const workflowType = core3.getInput('workflow-type', { required: true });
+      const workflowType = core2.getInput('workflow-type', { required: true });
       const generalActions = [
         {
           '@context': 'http://schema.org',
@@ -18110,7 +18110,7 @@ var require_actions = __commonJS({
 // src/teams-notification/sections.js
 var require_sections = __commonJS({
   'src/teams-notification/sections.js'(exports2, module2) {
-    var core3 = require_core();
+    var core2 = require_core();
     var { context } = require_github();
     var { getActions } = require_actions();
     function getGeneralFacts() {
@@ -18255,11 +18255,11 @@ var require_sections = __commonJS({
 // src/teams-notification/getTeamsNotificationBody.js
 var require_getTeamsNotificationBody = __commonJS({
   'src/teams-notification/getTeamsNotificationBody.js'(exports2, module2) {
-    var core3 = require_core();
+    var core2 = require_core();
     var { getSections } = require_sections();
     function getInitialAdaptiveCardBody() {
-      const title = core3.getInput('title', { required: true });
-      const workflowStatus = core3.getInput('workflow-status', {
+      const title = core2.getInput('title', { required: true });
+      const workflowStatus = core2.getInput('workflow-status', {
         required: true
       });
       const themeColor =

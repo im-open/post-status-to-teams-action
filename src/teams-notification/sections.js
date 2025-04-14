@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const { context } = require('@actions/github');
 const { getActions } = require('./actions');
 function getGeneralFacts() {
-  const includeGeneralFacts = core2.getBooleanInput('include-default-facts', {
+  const includeGeneralFacts = core.getBooleanInput('include-default-facts', {
     required: false
   });
   if (!includeGeneralFacts) {
@@ -10,7 +10,7 @@ function getGeneralFacts() {
     return [];
   }
 
-  const status = core2.getInput('workflow-status', { required: true });
+  const status = core.getInput('workflow-status', { required: true });
   const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
   let ref = context.ref;
   if (ref.startsWith('refs/pull/')) {
@@ -48,7 +48,7 @@ function getGeneralFacts() {
 }
 function getConditionalFacts() {
   const conditionalFacts = [];
-  const environment = core2.getInput('environment');
+  const environment = core.getInput('environment');
   if (environment) {
     conditionalFacts.push({
       title: 'Environment: ',
@@ -58,7 +58,7 @@ function getConditionalFacts() {
   return conditionalFacts;
 }
 function getTheFacts() {
-  const customFactsInput = core2.getInput('custom-facts');
+  const customFactsInput = core.getInput('custom-facts');
   const customFactsArray = customFactsInput
     ? JSON.parse(customFactsInput).map(fact => ({
         title: fact.name || 'Custom Fact', // Use a default title if missing
@@ -71,9 +71,9 @@ function getTheFacts() {
   return allFacts;
 }
 function getSections() {
-  const workflowType = core2.getInput('workflow-type', { required: true });
-  const workflowStatus = core2.getInput('workflow-status', { required: true });
-  const timeZone = core2.getInput('timezone') || 'UTC'; // Default to UTC if not provided
+  const workflowType = core.getInput('workflow-type', { required: true });
+  const workflowStatus = core.getInput('workflow-status', { required: true });
+  const timeZone = core.getInput('timezone') || 'UTC'; // Default to UTC if not provided
 
   let formattedDate;
   try {
@@ -90,7 +90,7 @@ function getSections() {
   const generalFacts = getGeneralFacts();
   const conditionalFacts = getConditionalFacts(); // Get conditional facts
   const customFacts = getTheFacts(); // Get custom facts
-  const status = core2.getInput('workflow-status', { required: true });
+  const status = core.getInput('workflow-status', { required: true });
 
   const statusFact = {
     type: 'ColumnSet',
