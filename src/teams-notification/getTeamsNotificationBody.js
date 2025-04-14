@@ -1,8 +1,8 @@
 const core = require('@actions/core');
 const { getSections } = require('./sections');
 function getInitialAdaptiveCardBody() {
-  const title = core2.getInput('title', { required: true });
-  const workflowStatus = core2.getInput('workflow-status', { required: true });
+  const title = core.getInput('title', { required: true });
+  const workflowStatus = core.getInput('workflow-status', { required: true });
   const themeColor =
     workflowStatus === 'success'
       ? 'good'

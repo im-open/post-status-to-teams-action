@@ -18258,8 +18258,8 @@ var require_getTeamsNotificationBody = __commonJS({
     var core3 = require_core();
     var { getSections } = require_sections();
     function getInitialAdaptiveCardBody() {
-      const title = core2.getInput('title', { required: true });
-      const workflowStatus = core2.getInput('workflow-status', {
+      const title = core3.getInput('title', { required: true });
+      const workflowStatus = core3.getInput('workflow-status', {
         required: true
       });
       const themeColor =
