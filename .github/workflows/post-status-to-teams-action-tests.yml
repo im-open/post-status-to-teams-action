@@ -127,7 +127,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      MS_TEAMS_URI: ${{ vars.MS_TEAMS_URI }}
+      MS_TEAMS_URI: ${{ secrets.MS_TEAMS_URI }}
       TITLE: 'configured-inputs-test'
       STATUS: 'success'
       COLOR: 'green'
