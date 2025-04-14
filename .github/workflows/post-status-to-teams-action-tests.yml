@@ -59,7 +59,9 @@ jobs:
 
       - name: 1b - Then the outcome should be failure
         if: always()
-        run: ./test/assert-values-match.sh --name "step outcome" --expected "failure" --actual "${{ steps.missing-status.outcome }}"
+        run: |
+          chmod +x ./test/assert-values-match.sh
+          ./test/assert-values-match.sh --name "step outcome" --expected "failure" --actual "${{ steps.missing-status.outcome }}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
