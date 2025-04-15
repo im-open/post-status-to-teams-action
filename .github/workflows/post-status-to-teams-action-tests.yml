@@ -263,7 +263,7 @@ jobs:
         run: |
           echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Build Notifications Teams channel."
           echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
-          echo "${{ env.MS_TEAMS_URI}"
+          echo "${{ env.MS_TEAMS_URI}}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
