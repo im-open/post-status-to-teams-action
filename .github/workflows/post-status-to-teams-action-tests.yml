@@ -1,19 +1,20 @@
 ##########################################################################################
 # Usage:
 #   This workflow will run tests against im-open/post-status-to-teams-action.  It
-#   can be manually kicked off by providing the action's ref these tests should
-#   be run against.  It can also be kicked off via repository_dispatch from the 
-#   action to be tested.  The payload should include the ref to be tested.
-#   For both trigger types, this workflow will then checkout the action at the specified
-#   ref and execute the tests.  For repo dispatch triggers additional data in the payload
-#   will be used to report the status of the tests back to the action's repository.
-#
+#   can be manually kicked off by providing the action's ref that these tests should
+#   be run against.  It is also kicked off as part of the PR process and is a requirement
+#   to pass before a PR can be merged into the main branch.
 ##########################################################################################
 
 name: post-status-to-teams-action-tests
 run-name: Test post-status-to-teams-action@${{ inputs.ref || github.event.client_payload.action-ref}}
 
 on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
   workflow_dispatch:
     inputs:
       ref:
@@ -24,7 +25,6 @@ on:
 
 env:
   ACTION_REF: ${{ inputs.ref || github.event.client_payload.action-ref }}
-  NOTIFICATIONS_CHANNEL: '${{ vars.BUILD_NOTIFICATIONS_CHANNEL_LINK}}'
 
 jobs:
   error-condition-tests:
@@ -191,9 +191,9 @@ jobs:
 
       - name: 5b - Then a Purple team member can manually verify the post was created correctly in Teams
         run: |
-          echo "Please manually check the 'configured-inputs-test' post in the Build Notifications Teams channel."
+          echo "Please manually check the 'configured-inputs-test' post in the Platform - Pipeline Builds Teams channel."
           echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
-          echo "${{ env.NOTIFICATIONS_CHANNEL}}"
+          echo "${{ env.MS_TEAMS_URI}}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
@@ -263,7 +263,7 @@ jobs:
         run: |
           echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Build Notifications Teams channel."
           echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
-          echo "${{ env.NOTIFICATIONS_CHANNEL}}"
+          echo "${{ env.MS_TEAMS_URI}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
