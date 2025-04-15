@@ -167,11 +167,11 @@ jobs:
           environment: ${{ env.ENVIRONMENT }}
           custom-facts: |
             [
-              { "name": "**----------------------------------------TEST DETAILS----------------------------------------**", "value": " " },
+              { "name": "**----TEST DETAILS----**", "value": " " },
               { "name": "Repo & branch under test:", "value": "im-open/post-status-to-teams-action@${{ env.ACTION_REF }}" },
               { "name": "Repo containing test:", "value": "${{ github.repository }}" },
               { "name": "Test Run that created this post:", "value": "${{ env.WORKFLOW_RUN_URL }}" },
-              { "name": "**--------------------------------------TEST INSTRUCTIONS--------------------------------------**", "value": " " },
+              { "name": "**----TEST INSTRUCTIONS----**", "value": " " },
               { "name": "Please review the following criteria for this post then click **${{ env.CUSTOM_ACTION_NAME }}**.\nOn the workflow summary in GitHub, click **Review Deployments** and:\n  - If this post meets the criteria, choose **Approve and deploy**\n  - If this post does not meet the criteria, choose **Reject**", "value": " " },
               { "name": " ", "value": "☐ The main title is _${{ env.TITLE }}_ " },
               { "name": " ", "value": "☐ The card color is _${{ env.COLOR }}_ (this might be broken)" },
@@ -240,19 +240,19 @@ jobs:
           include-default-facts: false
           custom-facts: |
             [
-              { "name": "<b>--------------------------------------TEST DETAILS--------------------------------------</b>", "value": " " },
+              { "name": "**----TEST DETAILS----**", "value": " " },
               { "name": "Repo & branch under test:", "value": "im-open/post-status-to-teams-action@${{ env.ACTION_REF }}" },
               { "name": "Repo containing test:", "value": "${{ github.repository }}" },
               { "name": "Test Run that created this post:", "value": "${{ env.WORKFLOW_RUN_URL }}" },
-              { "name": "<b>------------------------------------TEST INSTRUCTIONS------------------------------------</b>", "value": " " },
-              { "name": "Please review the following criteria for this post then click <b>${{ env.CUSTOM_ACTION_NAME }}</b>.<br/>On the workflow summary in GitHub, click <b>Review Deployments</b> and:<br/>&nbsp;&nbsp;- If this post meets the criteria, choose <b>Approve and deploy</b><br/>&nbsp;&nbsp;- If this post does not meet the criteria, choose <b>Reject</b>", "value": " " },
-              { "name": " ", "value": "☐ The main title is <i>${{ env.TITLE }}</i> " },
-              { "name": " ", "value": "☐ The card color is <i>${{ env.COLOR }}</i> (this might be broken)" },
-              { "name": " ", "value": "☐ The first subtitle title is <i>${{ env.TYPE }} ${{ env.STATUS }}</i>" },
-              { "name": " ", "value": "☐ The timestamp under <i>${{ env.TYPE }} ${{ env.STATUS }}</i> should be close to the post's timestamp but in UTC" },
+              { "name": "**----TEST INSTRUCTIONS----**", "value": " " },
+              { "name": "Please review the following criteria for this post then click **${{ env.CUSTOM_ACTION_NAME }}**.\nOn the workflow summary in GitHub, click **Review Deployments** and:\n- If this post meets the criteria, choose **Approve and deploy**\n If this post does not meet the criteria, choose **Reject**", "value": " " },
+              { "name": " ", "value": "☐ The main title is _${{ env.TITLE }}_ " },
+              { "name": " ", "value": "☐ The card color is _${{ env.COLOR }}_ (this might be broken)" },
+              { "name": " ", "value": "☐ The first subtitle title is _${{ env.TYPE }} ${{ env.STATUS }}_" },
+              { "name": " ", "value": "☐ The timestamp under _${{ env.TYPE }} ${{ env.STATUS }}_ should be close to the post's timestamp but in UTC" },
               { "name": " ", "value": "☐ There should not be an Event Type, Status, Ref or Environment fact" },
-              { "name": " ", "value": "☐ There is a <i>View ${{ env.TYPE }} Log</i> button that links to the workflow summary" },
-              { "name": " ", "value": "☐ There is a <i>${{ env.CUSTOM_ACTION_NAME}}</i> that also links to the workflow summary" }
+              { "name": " ", "value": "☐ There is a _View ${{ env.TYPE }} Log_ button that links to the workflow summary" },
+              { "name": " ", "value": "☐ There is a _${{ env.CUSTOM_ACTION_NAME}}_ that also links to the workflow summary" }
             ]
           custom-actions: |
             [
