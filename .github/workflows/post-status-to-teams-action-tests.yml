@@ -201,6 +201,10 @@ jobs:
     needs: configured-inputs-test
     environment: 'manually-inspect-configured-inputs-teams-post'
     steps:
+      - name: Display Approval Instructions
+        run: |
+          echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Platform - Pipeline Builds Teams channel."
+          echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
       - run: echo "The all-inputs-and-success-status-test has been verified."
 
   default-inputs-test:
@@ -271,4 +275,8 @@ jobs:
     if: always()
     environment: 'manually-inspect-default-inputs-teams-post'
     steps:
+      - name: Display Approval Instructions
+        run: |
+          echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Platform - Pipeline Builds Teams channel."
+          echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
       - run: echo "The default-inputs-test has been verified."
