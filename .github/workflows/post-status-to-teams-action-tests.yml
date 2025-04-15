@@ -24,7 +24,7 @@ on:
         required: true
 
 env:
-  ACTION_REF: ${{ inputs.ref || github.event.client_payload.action-ref }}
+  ACTION_REF: ${{ inputs.ref || github.head_ref || github.ref }}
 
 jobs:
   error-condition-tests:
