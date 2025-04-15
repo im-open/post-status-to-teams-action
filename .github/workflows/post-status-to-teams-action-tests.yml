@@ -1,0 +1,298 @@
+##########################################################################################
+# Usage:
+#   This workflow will run tests against im-open/post-status-to-teams-action.  It
+#   can be manually kicked off by providing the action's ref these tests should
+#   be run against.  It can also be kicked off via repository_dispatch from the 
+#   action to be tested.  The payload should include the ref to be tested.
+#   For both trigger types, this workflow will then checkout the action at the specified
+#   ref and execute the tests.  For repo dispatch triggers additional data in the payload
+#   will be used to report the status of the tests back to the action's repository.
+#
+##########################################################################################
+
+name: post-status-to-teams-action-tests
+run-name: Test post-status-to-teams-action@${{ inputs.ref || github.event.client_payload.action-ref}}
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: |
+          A branch or tag from the post-status-to-teams-action repo.
+          The tests in this workflow will run against this ref.
+        required: true
+
+env:
+  ACTION_REF: ${{ inputs.ref || github.event.client_payload.action-ref }}
+  NOTIFICATIONS_CHANNEL: '${{ vars.BUILD_NOTIFICATIONS_CHANNEL_LINK}}'
+
+jobs:
+  error-condition-tests:
+    runs-on: ubuntu-latest
+
+    env:
+      MS_TEAMS_URI: ${{ secrets.MS_TEAMS_URI  }}
+
+    steps:
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+      - name: '                                                    SETUP                                                    '
+        run: echo ""
+
+      - name: Setup - Checkout this repo
+        uses: actions/checkout@v4 # Required to use the helper scripts
+
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+      - name: '                                  TEST 1 - MISSING WORKFLOW-STATUS ARG TEST                                  '
+        run: echo ""
+
+      - name: 1a - When post-status-to-teams-action is called with a missing workflow-status arg
+        id: missing-status
+        if: always()
+        continue-on-error: true # This is needed because we expect the step to fail but we need it to "pass" in order for the test job to succeed.
+        uses: ./
+        with:
+          teams-uri: ${{ env.MS_TEAMS_URI }}
+          workflow-status: ''
+          fail-on-error: false
+
+      - name: 1b - Then the outcome should be failure
+        if: always()
+        run: |
+          chmod +x ./test/assert-values-match.sh
+          ./test/assert-values-match.sh --name "step outcome" --expected "failure" --actual "${{ steps.missing-status.outcome }}"
+
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+      - name: '                                     TEST 2 - MISSING TEAMS-URI ARG TEST                                     '
+        run: echo ""
+
+      - name: 2a - When post-status-to-teams-action is called with a missing teams-uri arg
+        id: missing-teams-uri
+        if: always()
+        continue-on-error: true # This is needed because we expect the step to fail but we need it to "pass" in order for the test job to succeed.
+        uses: ./
+        with:
+          teams-uri: ''
+          workflow-status: 'success'
+          fail-on-error: false
+
+      - name: 2b - Then the outcome should be failure
+        if: always()
+        run: ./test/assert-values-match.sh --name "step outcome" --expected "failure" --actual "${{ steps.missing-teams-uri.outcome }}"
+
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+      - name: '                             TEST 3 - BAD TEAMS-URI ARG & FAIL-ON-ERROR IS TRUE                              '
+        run: echo ""
+
+      - name: 3a - When post-status-to-teams-action is called with bad data and fail-on-error is true
+        id: bad-data-and-fail-true
+        if: always()
+        continue-on-error: true # This is needed because we expect the step to fail but we need it to "pass" in order for the test job to succeed.
+        uses: ./
+        with:
+          teams-uri: 'https://bad-uri-that-does-not-make-sense.com'
+          workflow-status: 'success'
+          fail-on-error: true
+
+      - name: 3b - Then the outcome should be failure
+        if: always()
+        run: ./test/assert-values-match.sh --name "step outcome" --expected "failure" --actual "${{ steps.bad-data-and-fail-true.outcome }}"
+
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+      - name: '                             TEST 4 - BAD TEAMS-URI ARG & FAIL-ON-ERROR IS FALSE                             '
+        run: echo ""
+
+      - name: 4a - When post-status-to-teams-action is called with bad data and fail-on-error is false
+        id: bad-data-and-fail-false
+        if: always()
+        continue-on-error: true # This is needed because we expect the step to fail but we need it to "pass" in order for the test job to succeed.
+        uses: ./
+        with:
+          teams-uri: 'https://bad-uri-that-does-not-make-sense.com'
+          workflow-status: 'success'
+          fail-on-error: false
+
+      - name: 4b - Then the outcome should be success
+        if: always()
+        run: ./test/assert-values-match.sh --name "step outcome" --expected "success" --actual "${{ steps.bad-data-and-fail-false.outcome }}"
+
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+
+  configured-inputs-test:
+    runs-on: ubuntu-latest
+
+    env:
+      MS_TEAMS_URI: ${{ secrets.MS_TEAMS_URI }}
+      TITLE: 'configured-inputs-test'
+      STATUS: 'success'
+      COLOR: 'green'
+      TYPE: 'Test'
+      ENVIRONMENT: 'My test environment'
+      CUSTOM_ACTION_NAME: 'Continue test in GitHub'
+      WORKFLOW_RUN_URL: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+
+    steps:
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+      - name: '                                                    SETUP                                                    '
+        run: echo ""
+
+      - name: Setup - Checkout this repo
+        uses: actions/checkout@v4 # Required to use the helper scripts
+
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+      - name: '              TEST 5 - DEFAULT & CONDITIONAL FACTS & CUSTOM ACTIONS & USES SETS ALL INPUTS TEST              '
+        run: echo ""
+
+      - name: 5a - When post-status-to-teams-action is called with all inputs and a 'success' status
+        uses: ./
+        with:
+          # Required - No defaults
+          teams-uri: ${{ env.MS_TEAMS_URI }}
+          workflow-status: ${{ env.STATUS }}
+
+          # Required Args - Have defaults
+          title: ${{ env.TITLE }}
+          workflow-type: ${{ env.TYPE }}
+          timezone: 'America/Denver'
+
+          # Optional Args
+          include-default-facts: true
+          environment: ${{ env.ENVIRONMENT }}
+          custom-facts: |
+            [
+              { "name": "<b>----------------------------------------TEST DETAILS----------------------------------------</b>", "value": " " },
+              { "name": "Repo & branch under test:", "value": "im-open/post-status-to-teams-action@${{ env.ACTION_REF }}" },
+              { "name": "Repo containing test:", "value": "${{ github.repository }}" },
+              { "name": "Test Run that created this post:", "value": "${{ env.WORKFLOW_RUN_URL }}" },
+              { "name": "<b>--------------------------------------TEST INSTRUCTIONS--------------------------------------</b>", "value": " " },
+              { "name": "Please review the following criteria for this post then click <b>${{ env.CUSTOM_ACTION_NAME }}</b>.<br/>On the workflow summary in GitHub, click <b>Review Deployments</b> and:<br/>&nbsp;&nbsp;- If this post meets the criteria, choose <b>Approve and deploy</b><br/>&nbsp;&nbsp;- If this post does not meet the criteria, choose <b>Reject</b>", "value": " " },
+              { "name": " ", "value": "☐ The main title is <i>${{ env.TITLE }}</i> " },
+              { "name": " ", "value": "☐ The card color is <i>${{ env.COLOR }}</i> (this might be broken)" },
+              { "name": " ", "value": "☐ The first subtitle title is <i>${{ env.TYPE }} ${{ env.STATUS }}</i>" },
+              { "name": " ", "value": "☐ The timestamp under <i>${{ env.TYPE }} ${{ env.STATUS }}</i> should be close to the post's timestamp in Mountain time" },
+              { "name": " ", "value": "☐ The Event Type is <i>${{ github.event_name }}</i>" },
+              { "name": " ", "value": "☐ The Status is <i>${{ env.STATUS }}</i>" },
+              { "name": " ", "value": "☐ The Ref is a link to ${{ github.repository }}/${{ github.ref_name }}" },
+              { "name": " ", "value": "☐ The Environment is <i>${{ env.ENVIRONMENT }}</i>" },
+              { "name": " ", "value": "☐ There is a <i>View ${{ env.TYPE }} Log</i> button that links to the workflow summary" },
+              { "name": " ", "value": "☐ There is a <i>${{ env.CUSTOM_ACTION_NAME}}</i> that also links to the workflow summary" }
+            ]
+          custom-actions: |
+            [
+              { "name": "${{ env.CUSTOM_ACTION_NAME }}", "uri": "${{ env.WORKFLOW_RUN_URL }}" }
+            ]
+
+      - name: 5b - Then a Purple team member can manually verify the post was created correctly in Teams
+        run: |
+          echo "Please manually check the 'configured-inputs-test' post in the Build Notifications Teams channel."
+          echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
+          echo "${{ env.NOTIFICATIONS_CHANNEL}}"
+
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+
+  manually-inspect-configured-inputs-test-post-before-approving:
+    runs-on: ubuntu-latest
+    needs: configured-inputs-test
+    environment: 'manually-inspect-configured-inputs-teams-post'
+    steps:
+      - run: echo "The all-inputs-and-success-status-test has been verified."
+
+  default-inputs-test:
+    runs-on: ubuntu-latest
+    needs: manually-inspect-configured-inputs-test-post-before-approving
+    if: always()
+    env:
+      MS_TEAMS_URI: ${{ secrets.MS_TEAMS_URI }}
+      TITLE: 'GitHub Actions Workflow Status Update'
+      STATUS: 'failure'
+      COLOR: 'red'
+      TYPE: 'Build'
+      CUSTOM_ACTION_NAME: 'Continue test in GitHub'
+      WORKFLOW_RUN_URL: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+
+    steps:
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+      - name: '                                                    SETUP                                                    '
+        run: echo ""
+
+      - name: Setup - Checkout this repo
+        uses: actions/checkout@v4 # Required to use the helper scripts
+
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+      - name: '               TEST 6 - DEFAULT INPUTS AND DOES NOT INCLUDE DEFAULT OR CONDITIONAL FACTS TEST                '
+        run: echo ""
+
+      - name: 6a - When post-status-to-teams-action is called with default inputs and a 'failure' status
+        uses: ./
+        with:
+          teams-uri: ${{ env.MS_TEAMS_URI }}
+          workflow-status: ${{ env.STATUS }}
+          include-default-facts: false
+          custom-facts: |
+            [
+              { "name": "<b>--------------------------------------TEST DETAILS--------------------------------------</b>", "value": " " },
+              { "name": "Repo & branch under test:", "value": "im-open/post-status-to-teams-action@${{ env.ACTION_REF }}" },
+              { "name": "Repo containing test:", "value": "${{ github.repository }}" },
+              { "name": "Test Run that created this post:", "value": "${{ env.WORKFLOW_RUN_URL }}" },
+              { "name": "<b>------------------------------------TEST INSTRUCTIONS------------------------------------</b>", "value": " " },
+              { "name": "Please review the following criteria for this post then click <b>${{ env.CUSTOM_ACTION_NAME }}</b>.<br/>On the workflow summary in GitHub, click <b>Review Deployments</b> and:<br/>&nbsp;&nbsp;- If this post meets the criteria, choose <b>Approve and deploy</b><br/>&nbsp;&nbsp;- If this post does not meet the criteria, choose <b>Reject</b>", "value": " " },
+              { "name": " ", "value": "☐ The main title is <i>${{ env.TITLE }}</i> " },
+              { "name": " ", "value": "☐ The card color is <i>${{ env.COLOR }}</i> (this might be broken)" },
+              { "name": " ", "value": "☐ The first subtitle title is <i>${{ env.TYPE }} ${{ env.STATUS }}</i>" },
+              { "name": " ", "value": "☐ The timestamp under <i>${{ env.TYPE }} ${{ env.STATUS }}</i> should be close to the post's timestamp but in UTC" },
+              { "name": " ", "value": "☐ There should not be an Event Type, Status, Ref or Environment fact" },
+              { "name": " ", "value": "☐ There is a <i>View ${{ env.TYPE }} Log</i> button that links to the workflow summary" },
+              { "name": " ", "value": "☐ There is a <i>${{ env.CUSTOM_ACTION_NAME}}</i> that also links to the workflow summary" }
+            ]
+          custom-actions: |
+            [
+              { "name": "${{ env.CUSTOM_ACTION_NAME }}", "uri": "${{ env.WORKFLOW_RUN_URL }}" }
+            ]
+
+      - name: 6b - Then a Purple member can manually verify the post was created correctly in Teams
+        run: |
+          echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Build Notifications Teams channel."
+          echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
+          echo "${{ env.NOTIFICATIONS_CHANNEL}}"
+
+      - name: '-------------------------------------------------------------------------------------------------------------'
+        run: echo ""
+
+  manually-inspect-default-inputs-test-post-before-approving:
+    runs-on: ubuntu-latest
+    needs: default-inputs-test
+    if: always()
+    environment: 'manually-inspect-default-inputs-teams-post'
+    steps:
+      - run: echo "The default-inputs-test has been verified."
+
+  send-status-back-to-action-repo_for_dispatch_events:
+    runs-on: ubuntu-latest
+    needs: manually-inspect-default-inputs-test-post-before-approving
+    if: always() && github.event_name == 'repository_dispatch'
+    steps:
+      - name: Report status back to the action's repository
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PIPELINE_BOT_PAT }} # This is an org-level secret
+          script: |
+            const jobStatus = '${{ job.status }}';
+            github.rest.repos.createCommitStatus({
+              owner: '${{ github.event.client_payload.action-org }}',
+              repo: '${{ github.event.client_payload.action-name }}',
+              sha: '${{ github.event.client_payload.action-sha }}',
+              context: '${{ github.event.client_payload.commit-status-context }}',
+              target_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
+              state: jobStatus === 'success' ? 'success' : 'failure',
+              description: jobStatus === 'success' ? 'The external tests have passed' : 'The external tests did not pass',
+            });
