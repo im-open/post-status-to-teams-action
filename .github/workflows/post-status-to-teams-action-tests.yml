@@ -243,7 +243,7 @@ jobs:
               { "name": "Repo containing test:", "value": "${{ github.repository }}" },
               { "name": "Test Run that created this post:", "value": "${{ env.WORKFLOW_RUN_URL }}" },
               { "name": "**----TEST INSTRUCTIONS----**", "value": " " },
-              { "name": "- Please review the following criteria for this post then click **${{ env.CUSTOM_ACTION_NAME }}**.\n- On the workflow summary in GitHub, click **Review Deployments** and:\n - If this post meets the criteria, choose **Approve and deploy**\n  -  If this post does not meet the criteria, choose **Reject**", "value": " " },
+              { "name": "- Please review the following criteria for this post then click **${{ env.CUSTOM_ACTION_NAME }}**.\n- On the workflow summary in GitHub, click **Review Deployments** and:\n  - If this post meets the criteria, choose **Approve and deploy**\n  - If this post does not meet the criteria, choose **Reject**", "value": " " },
               { "name": " ", "value": "☐ The main title is _${{ env.TITLE }}_ and the text color is _${{ env.COLOR }}_" },
               { "name": " ", "value": "☐ The first subtitle title is _${{ env.TYPE }} ${{ env.STATUS }}_" },
               { "name": " ", "value": "☐ The timestamp under _${{ env.TYPE }} ${{ env.STATUS }}_ should be close to the post's timestamp but in UTC" },
