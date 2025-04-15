@@ -1,6 +1,6 @@
 # Post Status to Teams Action
 
-This action will post a status update to Microsoft Teams.
+This action will post a status update to Microsoft Teams. The post is done using Microsoft Teams workflows via an adaptive card.
 
 ## Index <!-- omit in toc -->
 
@@ -19,25 +19,27 @@ This action will post a status update to Microsoft Teams.
 ## Layout
 
 **Default Layout**
-![](images/Teams_Notification_Card.PNG)
+
+![](images/Teams_Notification_AdaptiveCard.PNG)
 
 **Layout when include-default-facts is set to false**
-![](images/notification-without-default-facts.png)
+
+![](images/notification-without-default-facts2.png)
 
 ## Inputs
 
 | Parameter               | Is Required | Default | Description                                                                                                                                                                          |
 |-------------------------|-------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `title`                 | true        | N/A     | The title of the card posted to Teams.                                                                                                                                               |
-| `workflow-status`       | true        | N/A     | The status to report. The values `success` and `failure` will result in green and red color indicators (respectively) on the Teams Card. Anything else will result in gray.          |
-| `workflow-type`         | true        | N/A     | The type of workflow. Default to `Build`. The most common types are `Build` and `Deploy`, but the value isn't restricted so anything can be used.                                    |
+| `title`                 | true        | N/A     | The title of the card posted to Teams. If no title is provided, title will default to "GitHub Actions Workflow Status Update".                                                                                                                                         |
+| `workflow-status`       | true        | N/A     | The status to report. The values `success` and `failure` will result in green and red color indicators (respectively) on the Teams Card. Anything else will result in blackish/gray color.          |
+| `workflow-type`         | true        | N/A     | The type of workflow. Defaults to `Build`. The most common types are `Build` and `Deploy`, but the value isn't restricted so anything can be used.                                    |
 | `teams-uri`             | true        | N/A     | The Teams webhook URI where notifications are sent.                                                                                                                                  |
 | `custom-facts`          | false       | ''      | JSON-parseable string defining a list of objects with name and value to display on the facts table.                                                                                  |
-| `custom-actions`        | false       | ''      | JSON-parseable string defining a list of objects with name and uri to include in the list of action buttons at the bottom of the card.                                               |
+| `custom-actions`        | false       | ''      | JSON-parseable string defining a list of objects with name and uri to include in the list of action buttons at the bottom of the card. As a default: A link to the Github workflow logs will always be present whether you specify any custom actions or not. not.                                               |
 | `timezone`              | false       | UTC     | A valid database time zone name, e.g. America/Denver. Defaults to `UTC`.                                                                                                             |
 | `environment`           | false       | ''      | Name of the environment. Won't be included if none.                                                                                                                                  |
 | `fail-on-error`         | false       | false   | When set to true will return an exit code 1 should the action fail to send the Teams notification. Default to `false`.                                                               |
-| `include-default-facts` | false       | true    | A flag determining whether or not to include the default facts. True and false are the expected values. The default facts are event type, status, and the repository and branch url. |
+| `include-default-facts` | false       | true    | A flag determining whether or not to include the default facts. True and false are the expected values. The default facts are event type and the repository and branch url. Status will always appear whether this is set to true or false. |
 
 ## Usage Examples
 
@@ -54,7 +56,7 @@ jobs:
 
       - name: Send Successful Build Notification
       # You may also reference just the major or major.minor version
-        uses: im-open/post-status-to-teams-action@v1.4.1
+        uses: im-open/post-status-to-teams-action@v2.0.0
         with:
           title: Successful build
           workflow-status: success
@@ -75,7 +77,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Send Successful Build Notification
-        uses: im-open/post-status-to-teams-action@v1.4.1
+        uses: im-open/post-status-to-teams-action@v2.0.0
         with:
           title: Successful build
           workflow-status: success
@@ -97,7 +99,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Send Successful Deploy Notification
-        uses: im-open/post-status-to-teams-action@v1.4.1
+        uses: im-open/post-status-to-teams-action@v2.0.0
         with:
           title: Successfully deployed
           workflow-status: success

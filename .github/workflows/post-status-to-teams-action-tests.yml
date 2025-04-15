@@ -1,19 +1,20 @@
 ##########################################################################################
 # Usage:
 #   This workflow will run tests against im-open/post-status-to-teams-action.  It
-#   can be manually kicked off by providing the action's ref these tests should
-#   be run against.  It can also be kicked off via repository_dispatch from the 
-#   action to be tested.  The payload should include the ref to be tested.
-#   For both trigger types, this workflow will then checkout the action at the specified
-#   ref and execute the tests.  For repo dispatch triggers additional data in the payload
-#   will be used to report the status of the tests back to the action's repository.
-#
+#   can be manually kicked off by providing the action's ref that these tests should
+#   be run against.  It is also kicked off as part of the PR process and is a requirement
+#   to pass before a PR can be merged into the main branch.
 ##########################################################################################
 
 name: post-status-to-teams-action-tests
 run-name: Test post-status-to-teams-action@${{ inputs.ref || github.event.client_payload.action-ref}}
 
 on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
   workflow_dispatch:
     inputs:
       ref:
@@ -23,8 +24,7 @@ on:
         required: true
 
 env:
-  ACTION_REF: ${{ inputs.ref || github.event.client_payload.action-ref }}
-  NOTIFICATIONS_CHANNEL: '${{ vars.BUILD_NOTIFICATIONS_CHANNEL_LINK}}'
+  ACTION_REF: ${{ inputs.ref || github.head_ref || github.ref }}
 
 jobs:
   error-condition-tests:
@@ -167,22 +167,21 @@ jobs:
           environment: ${{ env.ENVIRONMENT }}
           custom-facts: |
             [
-              { "name": "<b>----------------------------------------TEST DETAILS----------------------------------------</b>", "value": " " },
+              { "name": "**----TEST DETAILS----**", "value": " " },
               { "name": "Repo & branch under test:", "value": "im-open/post-status-to-teams-action@${{ env.ACTION_REF }}" },
               { "name": "Repo containing test:", "value": "${{ github.repository }}" },
               { "name": "Test Run that created this post:", "value": "${{ env.WORKFLOW_RUN_URL }}" },
-              { "name": "<b>--------------------------------------TEST INSTRUCTIONS--------------------------------------</b>", "value": " " },
-              { "name": "Please review the following criteria for this post then click <b>${{ env.CUSTOM_ACTION_NAME }}</b>.<br/>On the workflow summary in GitHub, click <b>Review Deployments</b> and:<br/>&nbsp;&nbsp;- If this post meets the criteria, choose <b>Approve and deploy</b><br/>&nbsp;&nbsp;- If this post does not meet the criteria, choose <b>Reject</b>", "value": " " },
-              { "name": " ", "value": "☐ The main title is <i>${{ env.TITLE }}</i> " },
-              { "name": " ", "value": "☐ The card color is <i>${{ env.COLOR }}</i> (this might be broken)" },
-              { "name": " ", "value": "☐ The first subtitle title is <i>${{ env.TYPE }} ${{ env.STATUS }}</i>" },
-              { "name": " ", "value": "☐ The timestamp under <i>${{ env.TYPE }} ${{ env.STATUS }}</i> should be close to the post's timestamp in Mountain time" },
-              { "name": " ", "value": "☐ The Event Type is <i>${{ github.event_name }}</i>" },
-              { "name": " ", "value": "☐ The Status is <i>${{ env.STATUS }}</i>" },
+              { "name": "**----TEST INSTRUCTIONS----**", "value": " " },
+              { "name": "- Please review the following criteria for this post then click **${{ env.CUSTOM_ACTION_NAME }}**.\n- On the workflow summary in GitHub, click **Review Deployments** and:\n  - If this post meets the criteria, choose **Approve and deploy**\n  - If this post does not meet the criteria, choose **Reject**", "value": " " },
+              { "name": " ", "value": "☐ The main title is _${{ env.TITLE }}_ and the text color is _${{ env.COLOR }}_" },
+              { "name": " ", "value": "☐ The first subtitle title is _${{ env.TYPE }} ${{ env.STATUS }}_" },
+              { "name": " ", "value": "☐ The timestamp under _${{ env.TYPE }} ${{ env.STATUS }}_ should be close to the post's timestamp in Mountain time" },
+              { "name": " ", "value": "☐ The Status is _${{ env.STATUS }}_ and the text color is _${{ env.COLOR }}_" },
+              { "name": " ", "value": "☐ The Event Type is _${{ github.event_name }}_" },
               { "name": " ", "value": "☐ The Ref is a link to ${{ github.repository }}/${{ github.ref_name }}" },
-              { "name": " ", "value": "☐ The Environment is <i>${{ env.ENVIRONMENT }}</i>" },
-              { "name": " ", "value": "☐ There is a <i>View ${{ env.TYPE }} Log</i> button that links to the workflow summary" },
-              { "name": " ", "value": "☐ There is a <i>${{ env.CUSTOM_ACTION_NAME}}</i> that also links to the workflow summary" }
+              { "name": " ", "value": "☐ The Environment is _${{ env.ENVIRONMENT }}_" },
+              { "name": " ", "value": "☐ There is a _View ${{ env.TYPE }} Log_ button that links to the workflow summary" },
+              { "name": " ", "value": "☐ There is a _${{ env.CUSTOM_ACTION_NAME}}_ button that also links to the workflow summary" }
             ]
           custom-actions: |
             [
@@ -191,9 +190,8 @@ jobs:
 
       - name: 5b - Then a Purple team member can manually verify the post was created correctly in Teams
         run: |
-          echo "Please manually check the 'configured-inputs-test' post in the Build Notifications Teams channel."
+          echo "Please manually check the 'configured-inputs-test' post in the Platform - Pipeline Builds Teams channel."
           echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
-          echo "${{ env.NOTIFICATIONS_CHANNEL}}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
@@ -240,19 +238,19 @@ jobs:
           include-default-facts: false
           custom-facts: |
             [
-              { "name": "<b>--------------------------------------TEST DETAILS--------------------------------------</b>", "value": " " },
+              { "name": "**----TEST DETAILS----**", "value": " " },
               { "name": "Repo & branch under test:", "value": "im-open/post-status-to-teams-action@${{ env.ACTION_REF }}" },
               { "name": "Repo containing test:", "value": "${{ github.repository }}" },
               { "name": "Test Run that created this post:", "value": "${{ env.WORKFLOW_RUN_URL }}" },
-              { "name": "<b>------------------------------------TEST INSTRUCTIONS------------------------------------</b>", "value": " " },
-              { "name": "Please review the following criteria for this post then click <b>${{ env.CUSTOM_ACTION_NAME }}</b>.<br/>On the workflow summary in GitHub, click <b>Review Deployments</b> and:<br/>&nbsp;&nbsp;- If this post meets the criteria, choose <b>Approve and deploy</b><br/>&nbsp;&nbsp;- If this post does not meet the criteria, choose <b>Reject</b>", "value": " " },
-              { "name": " ", "value": "☐ The main title is <i>${{ env.TITLE }}</i> " },
-              { "name": " ", "value": "☐ The card color is <i>${{ env.COLOR }}</i> (this might be broken)" },
-              { "name": " ", "value": "☐ The first subtitle title is <i>${{ env.TYPE }} ${{ env.STATUS }}</i>" },
-              { "name": " ", "value": "☐ The timestamp under <i>${{ env.TYPE }} ${{ env.STATUS }}</i> should be close to the post's timestamp but in UTC" },
-              { "name": " ", "value": "☐ There should not be an Event Type, Status, Ref or Environment fact" },
-              { "name": " ", "value": "☐ There is a <i>View ${{ env.TYPE }} Log</i> button that links to the workflow summary" },
-              { "name": " ", "value": "☐ There is a <i>${{ env.CUSTOM_ACTION_NAME}}</i> that also links to the workflow summary" }
+              { "name": "**----TEST INSTRUCTIONS----**", "value": " " },
+              { "name": "- Please review the following criteria for this post then click **${{ env.CUSTOM_ACTION_NAME }}**.\n- On the workflow summary in GitHub, click **Review Deployments** and:\n  - If this post meets the criteria, choose **Approve and deploy**\n  - If this post does not meet the criteria, choose **Reject**", "value": " " },
+              { "name": " ", "value": "☐ The main title is _${{ env.TITLE }}_ and the text color is _${{ env.COLOR }}_" },
+              { "name": " ", "value": "☐ The first subtitle title is _${{ env.TYPE }} ${{ env.STATUS }}_" },
+              { "name": " ", "value": "☐ The timestamp under _${{ env.TYPE }} ${{ env.STATUS }}_ should be close to the post's timestamp but in UTC" },
+              { "name": " ", "value": "☐ The Status is _${{ env.STATUS }}_ and the text color is _${{ env.COLOR }}_" },
+              { "name": " ", "value": "☐ There should not be an Event Type, Ref or Environment fact" },
+              { "name": " ", "value": "☐ There is a _View ${{ env.TYPE }} Log_ button that links to the workflow summary" },
+              { "name": " ", "value": "☐ There is a _${{ env.CUSTOM_ACTION_NAME}}_ that also links to the workflow summary" }
             ]
           custom-actions: |
             [
@@ -261,9 +259,8 @@ jobs:
 
       - name: 6b - Then a Purple member can manually verify the post was created correctly in Teams
         run: |
-          echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Build Notifications Teams channel."
+          echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Platform - Pipeline Builds Teams channel."
           echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
-          echo "${{ env.NOTIFICATIONS_CHANNEL}}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
@@ -275,24 +272,3 @@ jobs:
     environment: 'manually-inspect-default-inputs-teams-post'
     steps:
       - run: echo "The default-inputs-test has been verified."
-
-  send-status-back-to-action-repo_for_dispatch_events:
-    runs-on: ubuntu-latest
-    needs: manually-inspect-default-inputs-test-post-before-approving
-    if: always() && github.event_name == 'repository_dispatch'
-    steps:
-      - name: Report status back to the action's repository
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.PIPELINE_BOT_PAT }} # This is an org-level secret
-          script: |
-            const jobStatus = '${{ job.status }}';
-            github.rest.repos.createCommitStatus({
-              owner: '${{ github.event.client_payload.action-org }}',
-              repo: '${{ github.event.client_payload.action-name }}',
-              sha: '${{ github.event.client_payload.action-sha }}',
-              context: '${{ github.event.client_payload.commit-status-context }}',
-              target_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              state: jobStatus === 'success' ? 'success' : 'failure',
-              description: jobStatus === 'success' ? 'The external tests have passed' : 'The external tests did not pass',
-            });
