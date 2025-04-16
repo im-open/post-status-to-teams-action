@@ -26,13 +26,11 @@ on:
 
 env:
   ACTION_REF: ${{ inputs.ref || github.head_ref || github.ref }}
+  PIPELINE_BUILDS_URL: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
 
 jobs:
   error-condition-tests:
     runs-on: ubuntu-latest
-
-    env:
-      PIPELINE_BUILDS_URL: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
 
     steps:
       - name: '-------------------------------------------------------------------------------------------------------------'
