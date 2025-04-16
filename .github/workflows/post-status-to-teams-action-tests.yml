@@ -1,12 +1,9 @@
 ##########################################################################################
 # Usage:
 #   This workflow will run tests against im-open/post-status-to-teams-action.  It
-#   can be manually kicked off by providing the action's ref these tests should
-#   be run against.  It can also be kicked off via repository_dispatch from the 
-#   action to be tested.  The payload should include the ref to be tested.
-#   For both trigger types, this workflow will then checkout the action at the specified
-#   ref and execute the tests.  For repo dispatch triggers additional data in the payload
-#   will be used to report the status of the tests back to the action's repository.
+#   can be manually kicked off by providing the action's ref that these tests should
+#   be run against.  It is also kicked off as part of the PR process and is a requirement
+#   to pass before a PR can be merged into the main branch.
 #
 ##########################################################################################
 
@@ -14,6 +11,11 @@ name: post-status-to-teams-action-tests
 run-name: Test post-status-to-teams-action@${{ inputs.ref || github.event.client_payload.action-ref}}
 
 on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
   workflow_dispatch:
     inputs:
       ref:
@@ -23,15 +25,11 @@ on:
         required: true
 
 env:
-  ACTION_REF: ${{ inputs.ref || github.event.client_payload.action-ref }}
-  NOTIFICATIONS_CHANNEL: '${{ vars.BUILD_NOTIFICATIONS_CHANNEL_LINK}}'
+  ACTION_REF: ${{ inputs.ref || github.head_ref || github.ref }}
 
 jobs:
   error-condition-tests:
     runs-on: ubuntu-latest
-
-    env:
-      MS_TEAMS_URI: ${{ secrets.MS_TEAMS_URI  }}
 
     steps:
       - name: '-------------------------------------------------------------------------------------------------------------'
@@ -53,7 +51,7 @@ jobs:
         continue-on-error: true # This is needed because we expect the step to fail but we need it to "pass" in order for the test job to succeed.
         uses: ./
         with:
-          teams-uri: ${{ env.MS_TEAMS_URI }}
+          teams-uri: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
           workflow-status: ''
           fail-on-error: false
 
@@ -127,7 +125,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      MS_TEAMS_URI: ${{ secrets.MS_TEAMS_URI }}
+      MS_TEAMS_URI: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
       TITLE: 'configured-inputs-test'
       STATUS: 'success'
       COLOR: 'green'
@@ -154,7 +152,7 @@ jobs:
         uses: ./
         with:
           # Required - No defaults
-          teams-uri: ${{ env.MS_TEAMS_URI }}
+          teams-uri: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
           workflow-status: ${{ env.STATUS }}
 
           # Required Args - Have defaults
@@ -191,9 +189,9 @@ jobs:
 
       - name: 5b - Then a Purple team member can manually verify the post was created correctly in Teams
         run: |
-          echo "Please manually check the 'configured-inputs-test' post in the Build Notifications Teams channel."
+          echo "Please manually check the 'configured-inputs-test' post in the Platform - Pipeline Builds Teams channel."
           echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
-          echo "${{ env.NOTIFICATIONS_CHANNEL}}"
+          echo "${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
@@ -210,7 +208,7 @@ jobs:
     needs: manually-inspect-configured-inputs-test-post-before-approving
     if: always()
     env:
-      MS_TEAMS_URI: ${{ secrets.MS_TEAMS_URI }}
+      MS_TEAMS_URI: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
       TITLE: 'GitHub Actions Workflow Status Update'
       STATUS: 'failure'
       COLOR: 'red'
@@ -235,7 +233,7 @@ jobs:
       - name: 6a - When post-status-to-teams-action is called with default inputs and a 'failure' status
         uses: ./
         with:
-          teams-uri: ${{ env.MS_TEAMS_URI }}
+          teams-uri: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
           workflow-status: ${{ env.STATUS }}
           include-default-facts: false
           custom-facts: |
@@ -261,9 +259,9 @@ jobs:
 
       - name: 6b - Then a Purple member can manually verify the post was created correctly in Teams
         run: |
-          echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Build Notifications Teams channel."
+          echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Platform - Pipeline Builds Teams channel."
           echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
-          echo "${{ env.NOTIFICATIONS_CHANNEL}}"
+          echo "${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
@@ -275,24 +273,3 @@ jobs:
     environment: 'manually-inspect-default-inputs-teams-post'
     steps:
       - run: echo "The default-inputs-test has been verified."
-
-  send-status-back-to-action-repo_for_dispatch_events:
-    runs-on: ubuntu-latest
-    needs: manually-inspect-default-inputs-test-post-before-approving
-    if: always() && github.event_name == 'repository_dispatch'
-    steps:
-      - name: Report status back to the action's repository
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.PIPELINE_BOT_PAT }} # This is an org-level secret
-          script: |
-            const jobStatus = '${{ job.status }}';
-            github.rest.repos.createCommitStatus({
-              owner: '${{ github.event.client_payload.action-org }}',
-              repo: '${{ github.event.client_payload.action-name }}',
-              sha: '${{ github.event.client_payload.action-sha }}',
-              context: '${{ github.event.client_payload.commit-status-context }}',
-              target_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              state: jobStatus === 'success' ? 'success' : 'failure',
-              description: jobStatus === 'success' ? 'The external tests have passed' : 'The external tests did not pass',
-            });

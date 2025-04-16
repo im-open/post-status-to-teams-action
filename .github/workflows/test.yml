@@ -14,7 +14,7 @@ jobs:
           title: Successfully built the thing
           workflow-status: success
           workflow-type: Build
-          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          teams-uri: "${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}"
           timezone: America/Denver
 
       - name: Test Failed Build Notification
@@ -23,7 +23,7 @@ jobs:
           title: Failed to build the thing
           workflow-status: failure
           workflow-type: Build
-          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          teams-uri: "${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}"
           timezone: America/Denver
 
       - name: Test Successful Deploy Notification
@@ -32,7 +32,7 @@ jobs:
           title: Successfully deployed the thing
           workflow-status: success
           workflow-type: Deploy
-          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          teams-uri: "${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}"
           timezone: America/Denver
           custom-facts: |
             [
@@ -46,7 +46,7 @@ jobs:
           title: Failed to deploy the thing
           workflow-status: failure
           workflow-type: Deploy
-          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          teams-uri: "${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}"
           timezone: America/Denver
           custom-actions: |
             [
@@ -59,7 +59,7 @@ jobs:
           title: Successfully deployed the thing
           workflow-status: success
           workflow-type: Deploy
-          teams-uri: ${{ secrets.MS_TEAMS_URI }}
+          teams-uri: "${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}"
           timezone: America/Denver
           include-default-facts: 'false'
           custom-facts: |
