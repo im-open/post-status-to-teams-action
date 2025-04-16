@@ -26,7 +26,6 @@ on:
 
 env:
   ACTION_REF: ${{ inputs.ref || github.head_ref || github.ref }}
-  PIPELINE_BUILDS_URL: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
 
 jobs:
   error-condition-tests:
@@ -52,7 +51,7 @@ jobs:
         continue-on-error: true # This is needed because we expect the step to fail but we need it to "pass" in order for the test job to succeed.
         uses: ./
         with:
-          teams-uri: ${{ env.PIPELINE_BUILDS_URL }}
+          teams-uri: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
           workflow-status: ''
           fail-on-error: false
 
@@ -126,7 +125,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      MS_TEAMS_URI: ${{ env.PIPELINE_BUILDS_URL }}
+      MS_TEAMS_URI: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
       TITLE: 'configured-inputs-test'
       STATUS: 'success'
       COLOR: 'green'
@@ -153,7 +152,7 @@ jobs:
         uses: ./
         with:
           # Required - No defaults
-          teams-uri: ${{ env.PIPELINE_BUILDS_URL }}
+          teams-uri: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
           workflow-status: ${{ env.STATUS }}
 
           # Required Args - Have defaults
@@ -192,7 +191,7 @@ jobs:
         run: |
           echo "Please manually check the 'configured-inputs-test' post in the Platform - Pipeline Builds Teams channel."
           echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
-          echo "${{ env.PIPELINE_BUILDS_URL }}"
+          echo "${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
@@ -209,7 +208,7 @@ jobs:
     needs: manually-inspect-configured-inputs-test-post-before-approving
     if: always()
     env:
-      MS_TEAMS_URI: ${{ env.PIPELINE_BUILDS_URL }}
+      MS_TEAMS_URI: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
       TITLE: 'GitHub Actions Workflow Status Update'
       STATUS: 'failure'
       COLOR: 'red'
@@ -234,7 +233,7 @@ jobs:
       - name: 6a - When post-status-to-teams-action is called with default inputs and a 'failure' status
         uses: ./
         with:
-          teams-uri: ${{ env.PIPELINE_BUILDS_URL }}
+          teams-uri: ${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}
           workflow-status: ${{ env.STATUS }}
           include-default-facts: false
           custom-facts: |
@@ -262,7 +261,7 @@ jobs:
         run: |
           echo "Please manually check the 'GitHub Actions Workflow Status Update' post in the Platform - Pipeline Builds Teams channel."
           echo "The criteria to check should be listed in the custom facts section at the bottom of the card."
-          echo "${{ env.PIPELINE_BUILDS_URL }}"
+          echo "${{ vars.PIPELINE_BUILDS_WEBHOOK_URL }}"
 
       - name: '-------------------------------------------------------------------------------------------------------------'
         run: echo ""
