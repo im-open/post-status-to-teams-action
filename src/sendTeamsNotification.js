@@ -1,7 +1,7 @@
-const core = require('@actions/core');
-const axios = require('axios');
+import * as core from '@actions/core';
+import axios from 'axios';
 
-function sendTeamsNotification(teamsUri, body) {
+export default function sendTeamsNotification(teamsUri, body) {
   axios({
     method: 'post',
     url: teamsUri,
@@ -21,5 +21,3 @@ function sendTeamsNotification(teamsUri, body) {
       }
     });
 }
-
-module.exports = { sendTeamsNotification };

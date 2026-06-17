@@ -1,5 +1,5 @@
-const core = require('@actions/core');
-const { context } = require('@actions/github');
+import * as core from '@actions/core';
+import * as github from '@actions/github';
 
 function getCustomActions() {
   const customActionsInput = core.getInput('custom-actions');
@@ -17,7 +17,7 @@ function getCustomActions() {
   }));
 }
 
-function getActions() {
+export default function getActions() {
   const workflowType = core.getInput('workflow-type', { required: true });
   const generalActions = [
     {
@@ -25,12 +25,10 @@ function getActions() {
       '@type': 'ViewAction',
       name: `View ${workflowType} Log`,
       target: [
-        `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${context.runId}`
+        `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${github.context.runId}`
       ]
     }
   ];
 
   return [...generalActions, ...getCustomActions()];
 }
-
-module.exports = { getActions };
