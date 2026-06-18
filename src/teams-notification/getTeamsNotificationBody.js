@@ -1,5 +1,5 @@
-const core = require('@actions/core');
-const { getSections } = require('./sections');
+import * as core from '@actions/core';
+import getSections from './sections';
 
 function getInitialMessageBody() {
   const title = core.getInput('title', { required: true });
@@ -20,7 +20,7 @@ function getInitialMessageBody() {
   };
 }
 
-function getTeamsNotificationBody() {
+export default function getTeamsNotificationBody() {
   const notificationBody = {
     ...getInitialMessageBody(),
     sections: getSections()
@@ -28,5 +28,3 @@ function getTeamsNotificationBody() {
 
   return notificationBody;
 }
-
-module.exports = { getTeamsNotificationBody };

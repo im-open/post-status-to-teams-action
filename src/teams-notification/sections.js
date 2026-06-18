@@ -1,6 +1,6 @@
-const core = require('@actions/core');
-const { context } = require('@actions/github');
-const { getActions } = require('./actions');
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+import getActions from './actions';
 
 function getGeneralFacts() {
   const includeGeneralFacts = core.getBooleanInput('include-default-facts', {
@@ -14,7 +14,7 @@ function getGeneralFacts() {
   const status = core.getInput('workflow-status', { required: true });
   const repoUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}`;
 
-  let ref = context.ref;
+  let ref = github.context.ref;
 
   if (ref.startsWith('refs/pull/')) {
     // Refs for un-merged pull requests follow the pattern:
@@ -31,7 +31,7 @@ function getGeneralFacts() {
   const generalFacts = [
     {
       name: 'Event Type: ',
-      value: `\`${context.eventName}\``
+      value: `\`${github.context.eventName}\``
     },
     {
       name: 'Status: ',
@@ -71,7 +71,7 @@ function getTheFacts() {
   ];
 }
 
-function getSections() {
+export default function getSections() {
   const workflowType = core.getInput('workflow-type', { required: true });
   const workflowStatus = core.getInput('workflow-status', { required: true });
   const timeZone = core.getInput('timezone');
@@ -86,5 +86,3 @@ function getSections() {
 
   return [section];
 }
-
-module.exports = { getSections };

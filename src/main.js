@@ -1,8 +1,6 @@
-const core = require('@actions/core');
-const { sendTeamsNotification } = require('./sendTeamsNotification');
-const {
-  getTeamsNotificationBody
-} = require('./teams-notification/getTeamsNotificationBody');
+import * as core from '@actions/core';
+import sendTeamsNotification from './sendTeamsNotification';
+import getTeamsNotificationBody from './teams-notification/getTeamsNotificationBody';
 
 function run() {
   const notificationBody = getTeamsNotificationBody();
